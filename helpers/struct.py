@@ -22,15 +22,14 @@ class Paziente:
         tot = 0
         i = 0
 
-        test = paziente.test_array
+        #test = paziente.test_array
+        test = list(paziente.test_array)
+        #print(test)
 
-        for t in test:
-            n = int(t)
-            if i<5:
-                tot = tot + n * durate[i]
-                i += 1
-            else :
-                break
+        for t in range(0,5):
+            n = int(test[t])
+            tot = tot + n * durate[t]
+
         return tot
 
 

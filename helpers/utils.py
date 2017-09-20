@@ -1,5 +1,7 @@
 import os
 import random
+from helpers.struct import *
+
 
 def output(lock, message):
     lock.acquire()
@@ -85,9 +87,15 @@ def loop_int_input(lock, header):
 
 def inserimento_random(listp):
     saletta = [1, 2, 3]
+    n = 0
     for i in range(0, len(listp)):
-        listp[i].saletta = random.choice(saletta)
-        # output(out_lck,"Paziente "+str(listp[i].id)+" nella saletta: "+str(listp[i].saletta))
+        if n<3:
+            listp[i].saletta = saletta[n]
+            n += 1
+        elif n>2:
+            n=0
+            listp[i].saletta = saletta[n]
+            n += 1
 
     sala1 = []
     sala2 = []
@@ -104,5 +112,21 @@ def inserimento_random(listp):
             if s == 3:
                 if listp[i].saletta == s:
                     sala3.append(listp[i].id)
+
+    return sala1,sala2,sala3
+
+
+
+def inserimento_per_durata(durata_sal,listp):
+    sala1 = []
+    sala2 = []
+    sala3 = []
+
+    for i in range(0,len(listp)):
+        dur = Paziente.somma_durata_singolo(listp[i])
+        print("Durata esame P"+i+" : "+dur)
+
+
+
 
     return sala1,sala2,sala3
