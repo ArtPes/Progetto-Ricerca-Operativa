@@ -1,6 +1,9 @@
-from helpers.utils import *
+
+
 import threading
 from helpers.struct import *
+import random
+from helpers.utils import *
 
 if __name__ == "__main__":
 
@@ -45,5 +48,17 @@ if __name__ == "__main__":
 
 
 
+                #inserimento random nelle sale
+                sala1,sala2,sala3 = inserimento_random(listp)
+
+                n1 = len(sala1)
+                n2 = len(sala2)
+                n3 = len(sala3)
+                saletta = [1, 2, 3]
+                if n1<1 or n2<1 or n3<1:
+                    sala1, sala2, sala3 = inserimento_random(listp)
 
 
+                output(out_lck,"Saletta 1: "+ str(sala1))
+                output(out_lck, "Saletta 2: " + str(sala2))
+                output(out_lck, "Saletta 3: " + str(sala3))
