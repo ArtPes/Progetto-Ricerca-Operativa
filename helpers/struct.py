@@ -1,43 +1,39 @@
-from helpers.utils import  *
+from helpers.utils import *
+
+
 # strutture Paziente Saletta Opertore Test
 
 class Paziente:
-
     id = 0
     durata_tot = 0
     test_array = ''
+    saletta = None
 
-    def __init__(self, line ):
+    def __init__(self, line):
 
-        self.id = int(line.split(None,1)[0])
-        test = line.split(None,1)[1]
-        self.test_array=test
+        self.id = int(line.split(None, 1)[0])
+        test = line.split(None, 1)[1]
+        self.test_array = test
 
+    def somma_durata_singolo(paziente):
 
-
-
-    def somma_durata_singolo(self,Paziente):
-
-        #durate di ogni singolo test
-        durate = [1,2,3,4,5]
+        # durate di ogni singolo test
+        durate = [1, 2, 4, 6, 8]
         tot = 0
+        i = 0
 
-        test = Paziente.test_array.split()
+        test = paziente.test_array
 
         for t in test:
-            for i in range(0,4):
-                n = int(t)
-                tot = tot + n*durate[i]
+            n = int(t)
+            if i<5:
+                tot = tot + n * durate[i]
                 i += 1
+            else :
+                break
+        return tot
 
-        print("Tot durate singolo paziente: ",tot)
 
-    def somma_durate_all(self,Durate):
 
-        for i in range(0,len(Durate)):
-                tot = tot + Durate[i]
-                i += 1
-
-        print("Totae durate all pazienti: ",tot)
-
+    #def somma_durate_all(self, lista_durate,durata_media):
 
