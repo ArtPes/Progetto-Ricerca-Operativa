@@ -1,5 +1,6 @@
 from helpers.utils import *
 import threading
+from helpers.struct import *
 
 if __name__ == "__main__":
 
@@ -11,6 +12,8 @@ if __name__ == "__main__":
 
         if main_menu == 1:
             output(out_lck,"1")
+            paz = Paziente.inserisci_pazienti(out_lck,id)
+            output(out_lck,"Paziente :"+id,"Test:")
 
         elif main_menu == 2:
             output(out_lck,"2")
