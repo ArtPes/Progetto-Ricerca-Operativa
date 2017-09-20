@@ -1,4 +1,4 @@
-
+from helpers.utils import  *
 # strutture Paziente Saletta Opertore Test
 
 class Paziente:
@@ -7,7 +7,7 @@ class Paziente:
     durata_tot = 0
     test_array = []
 
-    def inserisci_pazienti(self,Paziente):
+    def inserisci_pazienti(self):
 
         array = []
         array_test = []
@@ -27,6 +27,8 @@ class Paziente:
             Paziente.id = int(array[i])
             Paziente.test_array = int(array_test[i])
             i += 1
+
+        return Paziente
 
     def somma_durata_singolo(self,Paziente):
 

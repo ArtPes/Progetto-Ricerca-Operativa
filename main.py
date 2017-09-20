@@ -12,8 +12,12 @@ if __name__ == "__main__":
 
         if main_menu == 1:
             output(out_lck,"1")
-            paz = Paziente.inserisci_pazienti(out_lck,id)
-            output(out_lck,"Paziente :"+id,"Test:")
+
+            paz = []
+
+            paz.inserisci_pazienti()
+
+            output(out_lck,"Paziente :"+paz.id)
 
         elif main_menu == 2:
             output(out_lck,"2")
