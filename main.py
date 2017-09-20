@@ -12,12 +12,16 @@ if __name__ == "__main__":
 
         if main_menu == 1:
             output(out_lck,"1")
+            listp = []
+            with open('helpers/pazienti.txt','r') as file_p:
+                for line in file_p:
+                    output(out_lck,line)
+                    pz=Paziente(line)
+                    output(out_lck, "Paziente :" +str( pz.id) )
+                    listp.append(pz)
 
-            paz = []
 
-            paz.inserisci_pazienti()
 
-            output(out_lck,"Paziente :"+paz.id)
 
         elif main_menu == 2:
             output(out_lck,"2")

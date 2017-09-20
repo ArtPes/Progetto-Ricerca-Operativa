@@ -5,30 +5,16 @@ class Paziente:
 
     id = 0
     durata_tot = 0
-    test_array = []
+    test_array = ''
 
-    def inserisci_pazienti(self):
+    def __init__(self, line ):
 
-        array = []
-        array_test = []
-
-        #file = open("helpers/pazienti.txt","r")
-
-        with open('helpers/pazienti.txt', 'r') as o:
-            for file in o:
-                array.append(file.split(None,1)[0])
-                array_test.append(file.split(None,1)[1])
+        self.id = int(line.split(None,1)[0])
+        test = line.split(None,1)[1]
+        self.test_array=test
 
 
-        print(array)
-        print(array_test)
 
-        for i in range(0,9):
-            Paziente.id = int(array[i])
-            Paziente.test_array = int(array_test[i])
-            i += 1
-
-        return Paziente
 
     def somma_durata_singolo(self,Paziente):
 
