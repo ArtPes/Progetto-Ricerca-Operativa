@@ -1,6 +1,7 @@
 import os
-import random
+
 from helpers.struct import *
+
 
 
 def output(lock, message):
@@ -130,3 +131,28 @@ def inserimento_per_durata(durata_sal,listp):
 
 
     return sala1,sala2,sala3
+
+def stampa_info_paziente(listp):
+
+    for i in range(0,len(listp)):
+        id = listp[i].id
+        test = set_test(listp[i].test_array)
+        sala = listp[i].saletta
+
+        print("Paziente: "+str(id)+" Saletta: "+str(sala)+" Test: "+str(test))
+
+def set_test(listp):
+
+    test = list(listp)
+    a = 1
+    lista_test = []
+
+    for i in range(0,5):
+        t = int(test[i])
+        n = t*a
+        lista_test.append(n)
+        a += 1
+
+    lista_test = [x for x in lista_test if x != 0]
+
+    return lista_test

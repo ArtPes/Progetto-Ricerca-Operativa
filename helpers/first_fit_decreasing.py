@@ -3,10 +3,14 @@
     http://www.ams.org/new-in-math/cover/bins1.html
     for a simple description of the method.
 """
+import math
+
+from helpers.struct import Paziente
 
 
 class Bin(object):
     """ Container for items that keeps a running sum """
+
     def __init__(self):
         self.items = []
         self.sum = 0
@@ -20,42 +24,80 @@ class Bin(object):
         return ('Bin(sum=%d, items=%s)' % (self.sum, str(self.items)))
 
 
-def pack(values, maxValue):
+def pack(listp, maxValue):
+
+    values = []
+    for i in range(0, len(listp)):
+        values.append(Paziente.somma_durata_singolo(listp[i]))
+
     values = sorted(values, reverse=True)
+
     bins = []
 
     for item in values:
         # Try to fit item into a bin
+
         for bin in bins:
             if bin.sum + item <= maxValue:
-                #print 'Adding', item, 'to', bin
+                # print 'Adding', item, 'to', bin
                 bin.append(item)
+
                 break
+
         else:
             # item didn't fit into any bin, start a new bin
-            #print 'Making new bin for', item
+            # print 'Making new bin for', item
             bin = Bin()
             bin.append(item)
             bins.append(bin)
 
+
     return bins
 
 
-def packAndShow(aList, maxValue):
+def packAndShow(listp):
+    lista_durate = []
 
-        """ Pack a list into bins and show the result """
-        #print ('List with sum', sum(aList), 'requires at least', (sum(aList)+maxValue-1)/maxValue, 'bins')
+    for i in range(0, len(listp)):
+        durata = Paziente.somma_durata_singolo(listp[i])
+        #print("Durata tot: " + str(durata))
+        lista_durate.append(durata)
 
-        bins = pack(aList, maxValue)
+    durata_tot = sum(lista_durate)
 
-        print ('Solution using', len(bins), 'bins:')
-        for bin in bins:
-            print (bin)
+    # calcolo la durata media per saletta
+    durata_sal = durata_tot / 3
+
+
+    max_durata = math.ceil(durata_sal)
+
+    bins = pack(listp, max_durata)
+
+    #print('Solution using', len(bins), 'bins:')
+
+    k = 1
+    y = 1
+    for bin in bins:
+        print("Saletta "+str(y)+": "+str(bin.items))
+        y += 1
+
+    for bin in bins:
+        # print(bin.items)
+        for i in range(0,len(bin.items)):
+            for j in range(0, len(listp)):
+                durata = Paziente.somma_durata_singolo(listp[j])
+                if bin.items[i] == durata:
+                    listp[j].saletta = k
+
+        k += 1
+
+
+
+
+
 
 if __name__ == '__main__':
     import random
 
-    #aList = [8,5,3,7,10,19,8,21,13,9]
-    #packAndShow(aList, 34)
-
-
+    # aList = [8,5,3,7,10,19,8,21,13,9]
+    # packAndShow(aList, 34)
