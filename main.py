@@ -4,6 +4,7 @@ import threading
 from helpers.struct import *
 import random
 from helpers.utils import *
+from helpers.first_fit_decreasing import *
 
 if __name__ == "__main__":
 
@@ -37,6 +38,8 @@ if __name__ == "__main__":
             output(out_lck, "Durata media per saletta: " + str(durata_sal))
             #TODO : inserimento per durata test
             # sala1, sala2, sala3 = inserimento_per_durata(durata_sal,listp)
+            max_durata = math.ceil(durata_sal)
+            packAndShow(lista_durate,max_durata)
 
 
         elif main_menu == 2:
