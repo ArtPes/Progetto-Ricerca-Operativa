@@ -1,5 +1,3 @@
-from helpers.utils import *
-
 
 # strutture Paziente Saletta Opertore Test
 
@@ -20,11 +18,8 @@ class Paziente:
         # durate di ogni singolo test
         durate = [1, 2, 4, 6, 8]
         tot = 0
-        i = 0
 
-        #test = paziente.test_array
         test = list(paziente.test_array)
-        #print(test)
 
         for t in range(0,5):
             n = int(test[t])
@@ -33,6 +28,4 @@ class Paziente:
         return tot
 
 
-
-    #def somma_durate_all(self, lista_durate,durata_media):
 

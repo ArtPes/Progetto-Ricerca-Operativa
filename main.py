@@ -23,6 +23,12 @@ if __name__ == "__main__":
 
             # inserimento nelle sale
             packAndShow(listp)
+
+            sala1, sala2, sala3 = inserimento_sala(listp)
+
+            output(out_lck, "Saletta 1: " + str(sala1))
+            output(out_lck, "Saletta 2: " + str(sala2))
+            output(out_lck, "Saletta 3: " + str(sala3))
             # show info dei pazienti
             stampa_info_paziente(listp)
 
@@ -45,3 +51,5 @@ if __name__ == "__main__":
             # show info dei pazienti
             stampa_info_paziente(listp)
             # TODO: vincoli per test di ogni paziente
+
+

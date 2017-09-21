@@ -3,7 +3,6 @@ import os
 from helpers.struct import *
 
 
-
 def output(lock, message):
     lock.acquire()
     print(message)
@@ -86,15 +85,16 @@ def loop_int_input(lock, header):
             else:
                 return selected
 
+# inserimento negli array sala1,2,3 dei pazienti seguendo ordine di immissione
 def inserimento_random(listp):
     saletta = [1, 2, 3]
     n = 0
     for i in range(0, len(listp)):
-        if n<3:
+        if n < 3:
             listp[i].saletta = saletta[n]
             n += 1
-        elif n>2:
-            n=0
+        elif n > 2:
+            n = 0
             listp[i].saletta = saletta[n]
             n += 1
 
@@ -114,42 +114,49 @@ def inserimento_random(listp):
                 if listp[i].saletta == s:
                     sala3.append(listp[i].id)
 
-    return sala1,sala2,sala3
+    return sala1, sala2, sala3
 
+# inserimento negli array sala1,2,3 dei pazienti
+def inserimento_sala(listp):
+    saletta = [1, 2, 3]
 
-
-def inserimento_per_durata(durata_sal,listp):
     sala1 = []
     sala2 = []
     sala3 = []
 
-    for i in range(0,len(listp)):
-        dur = Paziente.somma_durata_singolo(listp[i])
-        print("Durata esame P"+i+" : "+dur)
+    for s in saletta:
+        for i in range(0, len(listp)):
+            if s == 1:
+                if listp[i].saletta == s:
+                    sala1.append(listp[i].id)
+            if s == 2:
+                if listp[i].saletta == s:
+                    sala2.append(listp[i].id)
+            if s == 3:
+                if listp[i].saletta == s:
+                    sala3.append(listp[i].id)
+
+    return sala1, sala2, sala3
 
 
-
-
-    return sala1,sala2,sala3
-
+# stamapa le info del paziente (volendo aggiungere durata tot e altre info)
 def stampa_info_paziente(listp):
-
-    for i in range(0,len(listp)):
+    for i in range(0, len(listp)):
         id = listp[i].id
         test = set_test(listp[i].test_array)
         sala = listp[i].saletta
 
-        print("Paziente: "+str(id)+" Saletta: "+str(sala)+" Test: "+str(test))
+        print("Paziente: " + str(id) + " Saletta: " + str(sala) + " Test: " + str(test))
 
+# data la stringa di test "10101" la trasforma in un array che contiene i numeri dei test da effetturare es. 010100 = [2,4]
 def set_test(listp):
-
     test = list(listp)
     a = 1
     lista_test = []
 
-    for i in range(0,5):
+    for i in range(0, 5):
         t = int(test[i])
-        n = t*a
+        n = t * a
         lista_test.append(n)
         a += 1
 

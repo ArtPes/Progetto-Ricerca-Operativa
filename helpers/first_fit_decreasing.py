@@ -25,7 +25,6 @@ class Bin(object):
 
 
 def pack(listp, maxValue):
-
     values = []
     for i in range(0, len(listp)):
         values.append(Paziente.somma_durata_singolo(listp[i]))
@@ -51,7 +50,6 @@ def pack(listp, maxValue):
             bin.append(item)
             bins.append(bin)
 
-
     return bins
 
 
@@ -60,7 +58,7 @@ def packAndShow(listp):
 
     for i in range(0, len(listp)):
         durata = Paziente.somma_durata_singolo(listp[i])
-        #print("Durata tot: " + str(durata))
+        # print("Durata tot: " + str(durata))
         lista_durate.append(durata)
 
     durata_tot = sum(lista_durate)
@@ -68,22 +66,17 @@ def packAndShow(listp):
     # calcolo la durata media per saletta
     durata_sal = durata_tot / 3
 
-
     max_durata = math.ceil(durata_sal)
 
     bins = pack(listp, max_durata)
 
-    #print('Solution using', len(bins), 'bins:')
+    # print('Solution using', len(bins), 'bins:')
 
     k = 1
-    y = 1
-    for bin in bins:
-        print("Saletta "+str(y)+": "+str(bin.items))
-        y += 1
 
     for bin in bins:
         # print(bin.items)
-        for i in range(0,len(bin.items)):
+        for i in range(0, len(bin.items)):
             for j in range(0, len(listp)):
                 durata = Paziente.somma_durata_singolo(listp[j])
                 if bin.items[i] == durata:
@@ -92,12 +85,6 @@ def packAndShow(listp):
         k += 1
 
 
-
-
-
-
 if __name__ == '__main__':
     import random
 
-    # aList = [8,5,3,7,10,19,8,21,13,9]
-    # packAndShow(aList, 34)
