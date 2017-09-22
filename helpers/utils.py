@@ -85,6 +85,7 @@ def loop_int_input(lock, header):
             else:
                 return selected
 
+
 # inserimento negli array sala1,2,3 dei pazienti seguendo ordine di immissione
 def inserimento_random(listp):
     saletta = [1, 2, 3]
@@ -115,6 +116,7 @@ def inserimento_random(listp):
                     sala3.append(listp[i].id)
 
     return sala1, sala2, sala3
+
 
 # inserimento negli array sala1,2,3 dei pazienti
 def inserimento_sala(listp):
@@ -148,7 +150,9 @@ def stampa_info_paziente(listp):
 
         print("Paziente: " + str(id) + " Saletta: " + str(sala) + " Test: " + str(test))
 
-# data la stringa di test "10101" la trasforma in un array che contiene i numeri dei test da effetturare es. 010100 = [2,4]
+
+# data la stringa di test "10101" la trasforma in un array che contiene
+#  i numeri dei test da effetturare es. 010100 = [2,4]
 def set_test(listp):
     test = list(listp)
     a = 1
