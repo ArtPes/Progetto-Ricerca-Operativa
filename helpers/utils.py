@@ -149,6 +149,9 @@ def stampa_info_paziente(listp):
         sala = listp[i].saletta
 
         print("Paziente: " + str(id) + " Saletta: " + str(sala) + " Test: " + str(test))
+def stampa_info_saletta(lists):
+    for i in range(0,len(lists)):
+        print("saletta "+ str(i+1) +str(lists[i]))
 
 
 # data la stringa di test "10101" la trasforma in un array che contiene

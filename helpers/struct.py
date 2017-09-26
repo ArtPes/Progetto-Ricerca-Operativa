@@ -27,5 +27,18 @@ class Paziente:
 
         return tot
 
+class Nodo:
+
+    idN =0
+    idP= 0
+    visita = 0
+
+    def __init__(self,idNo,idPaz,test):
+        self.idN=idNo
+        self.idP=idPaz
+        self.visita=test
+
+
+
 
 
