@@ -65,6 +65,6 @@ if __name__ == "__main__":
             # show info dei pazienti
             stampa_info_paziente(listp)
 
-            process(lists,listp)
+            process(lists, listp)
 
             # TODO: vincoli per test di ogni paziente
