@@ -28,7 +28,7 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi,durate):
         trovato = False
         for j in range(0, len_nodi):
             if lista_nodi[i].visita == lista_nodi[j].visita and j > i and not trovato:
-                if not grafo_fixed[i][j]:
+                if grafo_fixed[i][j]:
                     trovato = True
                     grafo_new[i][j] = 1
                     grafo_new[j][i] = -1

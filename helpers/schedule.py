@@ -77,9 +77,8 @@ def crea_nodo(mp):
             nodi.append(nd)
     nd = Nodo(numn + 1, 0, 0)
     nodi.append(nd)
-    for i in range(0, len(nodi)):
-        print("nodo  " + str(i) + " :idp " + str(nodi[i].idP) + " idN: " + str(nodi[i].idN) + " visita: " + str(
-            nodi[i].visita))
+    # for i in range(0, len(nodi)): print("nodo  " + str(i) + " :idp " + str(nodi[i].idP) + " idN: " + str(nodi[
+    # i].idN) + " visita: " + str(nodi[i].visita))
 
     return nodi, numn
 
@@ -87,7 +86,7 @@ def crea_nodo(mp):
 def dur_t(test):
     durataTest = [1, 2, 4, 6, 8]
     i = 0
-    while i < 4:
+    while i < 5:
         if test == i:
             dt = durataTest[i]
 
@@ -95,8 +94,12 @@ def dur_t(test):
 
 
 def stampa3(matr):
+
     for i in range(0, len(matr)):
-        print(str(i) + str(matr[i]))
+        print(i,end = "   ",flush=True)
+    print("\r")
+    for i in range(0, len(matr)):
+        print(str(i)+"  " + str(matr[i]))
 
 
 def create_mat(nodi):
@@ -106,10 +109,35 @@ def create_mat(nodi):
     return mat
 
 
-def create_mat_bool(nodi):
-    mat = []
-    mat = [[False for i in range(0, len(nodi))] for j in range(0, len(nodi))]
-    return mat
+def create_mat_bool(nodi, grafo):
+    matbool = [[0 for i in range(0, len(nodi))] for j in range(0, len(nodi))]
+
+    '''
+    mette a False i nodi che:
+        - hanno stessa riga e colonna
+        - hanno pazienti diversi e lavori diversi
+    '''
+    for i in range(0, len(nodi)):
+        for j in range(0, len(nodi)):
+            if i == j or (nodi[i].idP != nodi[j].idP and nodi[i].visita != nodi[j].visita):
+                matbool[i][j] = False
+                # TODO : caso di più pazienti per saletta
+            else:
+                matbool[i][j] = True
+
+    # tutti nodi sono collegati a quello di partenza
+    for i in range(1,len(nodi)-1):
+        matbool[0][i]=True
+
+    # tutti nodi sono collegati a quello di fine
+    for i in range(1,len(nodi)-1):
+        matbool[i][len(nodi) - 1]=True
+
+    # impongo che nodo partenza e nodo arrivo non possono essere uguali
+    matbool[0][len(nodi) - 1] = False
+    matbool[len(nodi) - 1][0] = False
+
+    return matbool
 
 
 # matp e' la matrice start
@@ -134,7 +162,7 @@ def create_initial_sol(matp, nodi, mats):
             if nodi[j].idP == st_op[i]:
                 matp[0][j] = 1
                 matp[j][0] = -1
-    stampa3(matp)
+    # stampa3(matp)
     # stessa cosa per nodo finale
     for i in range(0, len(mats)):
         last_op.append(mats[i][len(mats[i]) - 1])
@@ -144,7 +172,7 @@ def create_initial_sol(matp, nodi, mats):
             if nodi[j].idP == last_op[i]:
                 matp[len(matp[j]) - 1][j] = -1
                 matp[j][len(matp[j]) - 1] = 1
-    stampa3(matp)
+    # stampa3(matp)
     # inserisco i nodi successivi
     """ciclo i e j mi serve per prendere i pazienti da ogni saletta 
         in seguito ciclo con z su la lunghezza di nodi (indice di riga matrice)
@@ -162,14 +190,15 @@ def create_initial_sol(matp, nodi, mats):
                 if nodi[z].idP == mats[i][j]:
 
                     for k in range(1, len(matp[z]) - 1):
-                        print("primo if, nodiz vale: " + str(nodi[z].idN) + " i vale " + str(i) + " j vale " + str(
-                            j) + " k vale : " + str(k))
+                        # print("primo if, nodiz vale: " + str(nodi[z].idN) + " i vale " + str(i) + " j vale " + str(
+                        # j) + " k vale : " + str(k))
                         if nodi[z].idP == nodi[k].idP:
                             matp[z][k] = 1
                             matp[k][z] = 1
                             if z == k:
                                 matp[z][k] = 0
-    stampa3(matp)
+    # stampa3(matp)
+    return matp
 
 
 def process(lists, listp):
@@ -178,17 +207,18 @@ def process(lists, listp):
     mp, ms = set_the_mat(lists, listp)
     durataTest = [1, 2, 4, 6, 8]
     # stampa_matrici(mp,"paziente","visita")
-    stampa_matrici(ms, "saletta", "paziente")
+    # stampa_matrici(ms, "saletta", "paziente")
 
-    nodi = []
     nodi, numn = crea_nodo(mp)
     mstart = create_mat(nodi)
-    stampa3(mstart)
-    mstartbool = create_mat_bool(nodi)
+
+    # crea la soluzione e poi crea matrice bool
+    matp = create_initial_sol(mstart, nodi, ms)
+    mstartbool = create_mat_bool(nodi, matp)
+    print("Stampa Matrice Booleana: ")
     stampa3(mstartbool)
-    create_initial_sol(mstart, nodi, ms)
 
     # crea una prima soluzione possibile
-    soluzione = soluzione_iniziale(mstart,mstartbool,nodi,durataTest)
+    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
+    print("Stampa di una possibile soluzione: ")
     stampa3(soluzione)
-

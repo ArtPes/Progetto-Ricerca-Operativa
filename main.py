@@ -33,6 +33,8 @@ if __name__ == "__main__":
                     lists.append(sala2)
                 if i==2:
                     lists.append(sala3)
+
+            stampa_info_paziente(listp)
             #output(out_lck, "Saletta 1: " + str(sala1))
             #output(out_lck, "Saletta 2: " + str(sala2))
             #output(out_lck, "Saletta 3: " + str(sala3))
