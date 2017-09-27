@@ -67,4 +67,5 @@ if __name__ == "__main__":
 
             process(lists, listp)
 
+
             # TODO: vincoli per test di ogni paziente
