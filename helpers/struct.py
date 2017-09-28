@@ -15,9 +15,7 @@ class Paziente:
         # durate di ogni singolo test
         durate = [1, 2, 4, 6, 8]
         tot = 0
-
         test = list(paziente.test_array)
-
         for t in range(0, 5):
             n = int(test[t])
             tot = tot + n * durate[t]
@@ -25,6 +23,7 @@ class Paziente:
         return tot
 
 
+# -------------------------------------------------------------------------------------
 class Nodo:
     idN = 0
     idP = 0
@@ -33,9 +32,10 @@ class Nodo:
     def __init__(self, idNo, idPaz, test):
         self.idN = idNo
         self.idP = idPaz
-        self.visita = test
+        self.visita = test - 1
 
 
+# -------------------------------------------------------------------------------------
 class Schedule:
     s_order = []
     durataTest = [1, 2, 4, 6, 8]
@@ -54,6 +54,7 @@ class Schedule:
             print('saletta' + str(s))
 
 
+# -------------------------------------------------------------------------------------
 # serve per il critical path
 class Node:
     def __init__(self, initdata):
@@ -73,6 +74,7 @@ class Node:
         self.next = newnext
 
 
+# -------------------------------------------------------------------------------------
 class UnorderedList:
     def __init__(self):
         self.head = None
@@ -124,3 +126,5 @@ class UnorderedList:
     def getFirst(self):
         item = self.head
         return item
+
+# -------------------------------------------------------------------------------------

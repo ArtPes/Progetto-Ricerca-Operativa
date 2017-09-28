@@ -3,14 +3,10 @@ from helpers.struct import *
 from helpers.soluzione import *
 
 
-def list_to_array(list):
-    return list
-
-
 def list_to_mat(list):
     mat = []
     for i in range(0, len(list)):
-        mat.append(list_to_array(list[i]))
+        mat.append(list[i])
     return mat
 
 
@@ -29,21 +25,8 @@ def set_the_mat(lists, listp):
 
     for j in range(0, len(newlistp)):
         matrixp.append(list_to_mat(newlistp[j]))
-    # print(matrixp)
+
     return (matrixp, matrixs)
-
-
-def stampa_matrici(mat, typ1, typ2):
-    for i in range(0, len(mat)):
-        print(str(typ1) + str(i))
-        for j in range(0, len(mat[i])):
-            print(str(typ2) + " " + str(j) + " " + str(mat[i][j]))
-
-
-def stampa_matrici2(mat):
-    for i in range(0, len(mat)):
-        for j in range(0, len(mat[i])):
-            print(str(i) + str(mat[i][j]))
 
 
 def crea_nodo(mp):
@@ -59,24 +42,12 @@ def crea_nodo(mp):
             nodi.append(nd)
     nd = Nodo(numn + 1, 0, 0)
     nodi.append(nd)
-    # for i in range(0, len(nodi)): print("nodo  " + str(i) + " :idp " + str(nodi[i].idP) + " idN: " + str(nodi[
-    # i].idN) + " visita: " + str(nodi[i].visita))
 
     return nodi, numn
 
 
-def dur_t(test):
-    durataTest = [1, 2, 4, 6, 8]
-    i = 0
-    while i < 5:
-        if test == i:
-            dt = durataTest[i]
-
-    return dt
-
-
 def stampa3(matr):
-
+    print("\n")
     for i in range(0, len(matr)):
         print(i,end = "   ",flush=True)
     print("\r")
@@ -85,15 +56,13 @@ def stampa3(matr):
 
 
 def create_mat(nodi):
-    mat = []
     dim = len(nodi)
     mat = [[0 for i in range(0, dim)] for j in range(0, dim)]
     return mat
 
 
-def create_mat_bool(nodi, grafo):
+def create_mat_bool(nodi):
     matbool = [[0 for i in range(0, len(nodi))] for j in range(0, len(nodi))]
-
     '''
     mette a False i nodi che:
         - hanno stessa riga e colonna
@@ -125,7 +94,6 @@ def create_mat_bool(nodi, grafo):
 # matp e' la matrice start
 # nodi e' la lista dei nodi
 # mats e' la lista delle salette che mi serve per capire chi inizia e finisce le op
-
 def create_initial_sol(matp, nodi, mats):
     # 1 per uscenti dal nodo, -1 per entranti
     st_op = []  # start operation
@@ -138,23 +106,23 @@ def create_initial_sol(matp, nodi, mats):
     # cerco operazioni iniziali nodo 0
     for i in range(0, len(mats)):
         st_op.append(mats[i][0])
-    print(st_op)
+    print("\nPazienti che possono essere successivi al nodo iniziale: "+str(st_op))
     for i in range(0, len(st_op)):
         for j in range(0, len(matp)):
             if nodi[j].idP == st_op[i]:
                 matp[0][j] = 1
                 matp[j][0] = 0
-    # stampa3(matp)
+
     # stessa cosa per nodo finale
     for i in range(0, len(mats)):
         last_op.append(mats[i][len(mats[i]) - 1])
-    print(last_op)
+    print("\nPazienti che possono raggiungere il nodo finale: "+str(last_op))
     for i in range(0, len(last_op)):
         for j in range(0, len(matp)):
             if nodi[j].idP == last_op[i]:
                 matp[len(matp[j]) - 1][j] = -1
                 matp[j][len(matp[j]) - 1] = 0
-    # stampa3(matp)
+
     # inserisco i nodi successivi
     """ciclo i e j mi serve per prendere i pazienti da ogni saletta 
         in seguito ciclo con z su la lunghezza di nodi (indice di riga matrice)
@@ -177,8 +145,8 @@ def create_initial_sol(matp, nodi, mats):
                             matp[k][z] = 1
                             if z == k:
                                 matp[z][k] = 0
-    # stampa3(matp)
-    #facciamo prima i piu' pesanti poi gli altri
+
+    # facciamo prima i piu' pesanti poi gli altri
     for i in range(1,len(matp)-1):
         for j in range(1,len(matp[i])-1):
             if matp[i][j]!=0 and matp[i][j]==matp[j][i]:
@@ -188,15 +156,16 @@ def create_initial_sol(matp, nodi, mats):
                 if nodi[i].visita < nodi[j].visita:
                     matp[i][j]=-1
                     matp[j][i]=1
-    stampa3(matp)
+
+    # TODO: se il nodo visitato è sucessivo al nodo 0, ha altri nodi da visitare (il paziente non ha
+    # solo quel test) allora questo nodo non può essere collegato con l'uscita
     return matp
 
 
-def process(lists, listp):
-    ms = []
-    mp = []
+def process(lists, listp,durataTest):
+
     mp, ms = set_the_mat(lists, listp)
-    durataTest = [1, 2, 4, 6, 8]
+
     # stampa_matrici(mp,"paziente","visita")
     # stampa_matrici(ms, "saletta", "paziente")
 
@@ -206,14 +175,14 @@ def process(lists, listp):
     # crea la soluzione e poi crea matrice bool
     matp = create_initial_sol(mstart, nodi, ms)
     stampa3(matp)
-    mstartbool = create_mat_bool(nodi, matp)
-    print("Stampa Matrice Booleana: ")
+    mstartbool = create_mat_bool(nodi)
+    print("\nStampa Matrice Booleana: ")
     stampa3(mstartbool)
 
     # crea una prima soluzione possibile
     soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
-    print("Stampa di una possibile soluzione: ")
+    print("\nStampa di una possibile soluzione: ")
     stampa3(soluzione)
 
     makespan = critical_path(soluzione,nodi,durataTest)
-    print("Makespan è:"+str(makespan))
+    print("\nMakespan è: "+str(makespan))

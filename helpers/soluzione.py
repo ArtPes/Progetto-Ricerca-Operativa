@@ -51,7 +51,7 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
                     trovato = True
                     grafo_new[i][j] = 1
                     grafo_new[j][i] = -1
-                    print("Inserito arco tra: " + str(lista_nodi[i].idN) + "<-->" + str(lista_nodi[j].idN))
+                    print("Inserito arco tra: " + str(lista_nodi[i].idN) + "-->" + str(lista_nodi[j].idN))
                 else:
                     trovato = True
                     print("Arco già inserito")
@@ -62,13 +62,12 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
             max = durate[i]
 
     max_makespan = max * len_nodi
-    print("Massimo makespan è:" + str(max_makespan))
+    print("\nMassimo makespan è:" + str(max_makespan))
     aciclico = check_aciclico(grafo_new, durate, lista_nodi, max_makespan)
-
     if aciclico:
-        print("Non è aciclico, soluzione ok!")
+        print("\nNon è ciclico, soluzione ok!")
     else:
-        print("E' aciclico !!!!!!!!!")
+        print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
 
     return grafo_new
 
@@ -89,12 +88,17 @@ def critical_path(grafo, nodi, durate):
             if grafo[nodo][i] == 1:
                 if not nodi_visita.search(i):
                     nodi_visita.add(i)
-                    test = nodi[nodo].visita
+                    test = nodi[i].visita
                     if costo[nodo] + durate[test] >= costo[i]:
                         costo[i] = durate[test] + costo[nodo]
         nodi_visita.remove(nodo)
-        print(costo)
-        # punto di break perchè entra in loop e stampa costi sempre più crescenti
-        #break
+    max = massimo(costo)
+    return max
 
-    return costo[len(nodi) - 1]
+
+def massimo(lista):
+    a=0
+    for i in range(0,len(lista)):
+        if lista[i]>a:
+            a=lista[i]
+    return a

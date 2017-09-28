@@ -8,11 +8,11 @@ from helpers.first_fit_decreasing import *
 if __name__ == "__main__":
 
     out_lck = threading.Lock()
-
+    durataTest = [1,2,4,6,8]
     while True:
         # Main Menu
         main_menu = loop_menu(out_lck, "\nSelect one of the following actions ('e' to exit): ",
-                              ["Pazienti Ordinati su Durata test", "Pazienti già inseriti"])
+                              ["Pazienti Ordinati First Fit Decreasing", "Pazienti inseriti con ordine di arrivo"])
 
         if main_menu == 1:
             listp = []
@@ -41,8 +41,7 @@ if __name__ == "__main__":
             # show info dei pazienti
             #stampa_info_saletta(lists)
             #stampa_info_paziente(listp)
-
-            # TODO: vincoli per test di ogni paziente
+            process(lists, listp, durataTest)
 
         elif main_menu == 2:
             listp = []
@@ -52,7 +51,7 @@ if __name__ == "__main__":
                     listp.append(pz)
             lists= []
             # inserimento random nelle sale
-            sala1, sala2, sala3 = inserimento_random(listp)
+            sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
             for i in range(0, 3):
                 if i == 0:
                     lists.append(sala1)
@@ -67,7 +66,4 @@ if __name__ == "__main__":
             # show info dei pazienti
             stampa_info_paziente(listp)
 
-            process(lists, listp)
-
-
-            # TODO: vincoli per test di ogni paziente
+            process(lists, listp, durataTest)
