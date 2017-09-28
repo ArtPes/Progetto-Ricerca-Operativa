@@ -12,7 +12,7 @@ a che ora deve presentarsi ciascun paziente affinchè il makespan dell’intero 
 
 ###### Decisioni:
 1. Pazienti inseriti nelle salette in due modi:
-        - Per ordine di arrivo (1-2-3-4-5....)
-        - Secondo First Fit Decreasing
+   - Per ordine di arrivo (1-2-3-4-5....)
+   - Secondo First Fit Decreasing
 
 2. Pazienti eseguono prima i test più LUNGHI
