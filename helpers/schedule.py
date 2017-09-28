@@ -3,24 +3,6 @@ from helpers.struct import *
 from helpers.soluzione import *
 
 
-class Schedule:
-    s_order = []
-    durataTest = [1, 2, 4, 6, 8]
-    listp = []
-
-    def __init__(self, pz, sz):
-        for p in pz:
-            self.listp.append(p)
-        for s in sz:
-            self.s_order.append(s)
-
-    def stampa_input(self):
-        for p in self.listp:
-            print('paziente' + str(p))
-        for s in self.s_order:
-            print('saletta' + str(s))
-
-
 def list_to_array(list):
     return list
 
@@ -222,3 +204,6 @@ def process(lists, listp):
     soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
     print("Stampa di una possibile soluzione: ")
     stampa3(soluzione)
+
+    makespan = critical_path(soluzione,nodi,durataTest)
+    print("Makespan è:"+str(makespan))
