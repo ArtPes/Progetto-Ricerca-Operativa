@@ -95,6 +95,6 @@ def critical_path(grafo, nodi, durate):
         nodi_visita.remove(nodo)
         print(costo)
         # punto di break perchè entra in loop e stampa costi sempre più crescenti
-        break
+        #break
 
     return costo[len(nodi) - 1]

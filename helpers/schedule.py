@@ -143,7 +143,7 @@ def create_initial_sol(matp, nodi, mats):
         for j in range(0, len(matp)):
             if nodi[j].idP == st_op[i]:
                 matp[0][j] = 1
-                matp[j][0] = -1
+                matp[j][0] = 0
     # stampa3(matp)
     # stessa cosa per nodo finale
     for i in range(0, len(mats)):
@@ -153,7 +153,7 @@ def create_initial_sol(matp, nodi, mats):
         for j in range(0, len(matp)):
             if nodi[j].idP == last_op[i]:
                 matp[len(matp[j]) - 1][j] = -1
-                matp[j][len(matp[j]) - 1] = 1
+                matp[j][len(matp[j]) - 1] = 0
     # stampa3(matp)
     # inserisco i nodi successivi
     """ciclo i e j mi serve per prendere i pazienti da ogni saletta 
@@ -163,8 +163,6 @@ def create_initial_sol(matp, nodi, mats):
         ciclo sulle colonne della nostra matrice mstart che viene passata come matp sempre di dimensione nodo
         quando trovo che l id del paziente e' presente in altri nodi all interno della lista [[per es P1= {n1=(1,2),n2={1,4)}]]
         vado a mettere 1 nella cella a cui deve seguire quel nodo (vedi 1 per uscenti)
-        ---SE NON HAI CAPITO , CAZZI TUOI ;) 
-        ora mi sa che bisogna fare la stessa cosa per la matrice booleana, bisogna stare attenti sul nodo terminatore a fare del casino
     """
     for i in range(0, len(mats)):
         for j in range(0, len(mats[i])):
@@ -180,6 +178,17 @@ def create_initial_sol(matp, nodi, mats):
                             if z == k:
                                 matp[z][k] = 0
     # stampa3(matp)
+    #facciamo prima i piu' pesanti poi gli altri
+    for i in range(1,len(matp)-1):
+        for j in range(1,len(matp[i])-1):
+            if matp[i][j]!=0 and matp[i][j]==matp[j][i]:
+                if nodi[i].visita >= nodi[j].visita:
+                    matp[i][j]=1
+                    matp[j][i]=-1
+                if nodi[i].visita < nodi[j].visita:
+                    matp[i][j]=-1
+                    matp[j][i]=1
+    stampa3(matp)
     return matp
 
 
@@ -196,6 +205,7 @@ def process(lists, listp):
 
     # crea la soluzione e poi crea matrice bool
     matp = create_initial_sol(mstart, nodi, ms)
+    stampa3(matp)
     mstartbool = create_mat_bool(nodi, matp)
     print("Stampa Matrice Booleana: ")
     stampa3(mstartbool)
