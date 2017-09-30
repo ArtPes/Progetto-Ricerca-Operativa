@@ -49,10 +49,10 @@ def crea_nodo(mp):
 def stampa3(matr):
     print("\n")
     for i in range(0, len(matr)):
-        print(i,end = "   ",flush=True)
+        print(i, end="   ", flush=True)
     print("\r")
     for i in range(0, len(matr)):
-        print(str(i)+"  " + str(matr[i]))
+        print(str(i) + "  " + str(matr[i]))
 
 
 def create_mat(nodi):
@@ -77,12 +77,12 @@ def create_mat_bool(nodi):
                 matbool[i][j] = True
 
     # tutti nodi sono collegati a quello di partenza
-    for i in range(1,len(nodi)-1):
-        matbool[0][i]=True
+    for i in range(1, len(nodi) - 1):
+        matbool[0][i] = True
 
     # tutti nodi sono collegati a quello di fine
-    for i in range(1,len(nodi)-1):
-        matbool[i][len(nodi) - 1]=True
+    for i in range(1, len(nodi) - 1):
+        matbool[i][len(nodi) - 1] = True
 
     # impongo che nodo partenza e nodo arrivo non possono essere uguali
     matbool[0][len(nodi) - 1] = False
@@ -104,25 +104,56 @@ def create_initial_sol(matp, nodi, mats):
             if i == j:
                     matp[i][j]=0"""
     # cerco operazioni iniziali nodo 0
-    for i in range(0, len(mats)):
+    """for i in range(0, len(mats)):
         st_op.append(mats[i][0])
+        print("mats i0:"+str(mats[i][0]))
     print("\nPazienti che possono essere successivi al nodo iniziale: "+str(st_op))
     for i in range(0, len(st_op)):
+        max_percorso=0
         for j in range(0, len(matp)):
             if nodi[j].idP == st_op[i]:
-                matp[0][j] = 1
-                matp[j][0] = 0
+                if max_percorso< nodi[j].visita:
+                    max_percorso= nodi[j].visita
+                    matp[0][nodi[j].idP+1] = 1
+                    matp[nodi[j].idP+1][0] = -1"""
+
+    fst_nd = []  # primi nodi
+    max_tmp = 0
+    ind = 0
+    for i in range(0, len(mats)):
+        fst_nd.append(mats[i][0])
+    for i in range(0, len(fst_nd)):
+        max_tmp = 0
+        for j in range(0, len(matp)):
+            if nodi[j].idP == fst_nd[i] and max_tmp < nodi[j].visita:
+                max_tmp = nodi[j].visita
+                ind = nodi[j].idN
+        matp[0][ind] = 1
+        matp[ind][0] = -1
 
     # stessa cosa per nodo finale
-    for i in range(0, len(mats)):
+    """for i in range(0, len(mats)):
         last_op.append(mats[i][len(mats[i]) - 1])
     print("\nPazienti che possono raggiungere il nodo finale: "+str(last_op))
     for i in range(0, len(last_op)):
         for j in range(0, len(matp)):
             if nodi[j].idP == last_op[i]:
                 matp[len(matp[j]) - 1][j] = -1
-                matp[j][len(matp[j]) - 1] = 0
-
+                matp[j][len(matp[j]) - 1] = 0"""
+    lst_nd = []  # ultimi nodi
+    min_tmp = 9  # inizializzo al max delle visite+1
+    for i in range(0, len(mats)):
+        lst_nd.append(mats[i][len(mats[i]) - 1])
+    for i in range(0, len(lst_nd)):
+        min_tmp = 9
+        for j in range(0, len(matp)):
+            if nodi[j].idP == lst_nd[i] and min_tmp > nodi[j].visita:
+                print("//////////////////")
+                min_tmp = nodi[j].visita
+                ind = nodi[j].idN
+        matp[len(matp[j]) - 1][ind] = -1
+        matp[ind][len(matp[j]) - 1] = 1
+    # stampa3(matp)
     # inserisco i nodi successivi
     """ciclo i e j mi serve per prendere i pazienti da ogni saletta 
         in seguito ciclo con z su la lunghezza di nodi (indice di riga matrice)
@@ -147,23 +178,98 @@ def create_initial_sol(matp, nodi, mats):
                                 matp[z][k] = 0
 
     # facciamo prima i piu' pesanti poi gli altri
-    for i in range(1,len(matp)-1):
-        for j in range(1,len(matp[i])-1):
-            if matp[i][j]!=0 and matp[i][j]==matp[j][i]:
+    for i in range(1, len(matp) - 1):
+        for j in range(1, len(matp[i]) - 1):
+            if matp[i][j] != 0 and matp[i][j] == matp[j][i]:
                 if nodi[i].visita >= nodi[j].visita:
-                    matp[i][j]=1
-                    matp[j][i]=-1
+                    matp[i][j] = 1
+                    matp[j][i] = -1
                 if nodi[i].visita < nodi[j].visita:
-                    matp[i][j]=-1
-                    matp[j][i]=1
+                    matp[i][j] = -1
+                    matp[j][i] = 1
 
-    # TODO: se il nodo visitato è sucessivo al nodo 0, ha altri nodi da visitare (il paziente non ha
-    # solo quel test) allora questo nodo non può essere collegato con l'uscita
     return matp
 
 
-def process(lists, listp,durataTest):
+def initial_sol(matp, nodi, mats, listp):
+    # assegno pazienti da salette e scelgo il nodo iniziale
+    fst_nd = []  # primi nodi
+    max_tmp = 0
+    for i in range(0, len(mats)):
+        fst_nd.append(mats[i][0])
+    for i in range(0, len(fst_nd)):
+        max_tmp = 0
+        for j in range(0, len(matp)):
+            if nodi[j].idP == fst_nd[i] and max_tmp < nodi[j].visita:
+                max_tmp = nodi[j].visita
+                ind = nodi[j].idN
+        matp[0][ind] = 1
+        matp[ind][0] = -1
 
+    lst_nd = []  # ultimi nodi
+    min_tmp = 9  # inizializzo al max delle visite+1
+    for i in range(0, len(mats)):
+        lst_nd.append(mats[i][len(mats[i]) - 1])
+    for i in range(0, len(lst_nd)):
+        min_tmp = 9
+        for j in range(0, len(matp)):
+            if nodi[j].idP == lst_nd[i] and min_tmp > nodi[j].visita:
+                print("//////////////////")
+                min_tmp = nodi[j].visita
+                ind = nodi[j].idN
+        matp[len(matp[j]) - 1][ind] = -1
+        matp[ind][len(matp[j]) - 1] = 1
+
+    # ordino i nodi escludendo il nodo 0 e len-2 che quindi e' l ultimo
+    tmpnd = []
+    res=[]
+    for i in range(0, len(listp)):
+        for j in range(0, len(nodi)):
+            if i + 1 == nodi[j].idP:
+                tmpnd.append(nodi[j])
+
+        res = sort_nodi_for_visit(tmpnd)
+        lres=len(res)-1
+        print(res)
+        for k in range(0, len(res)):
+            if k<lres:
+                matp[res[k]][res[k+1]] = 1
+                matp[res[k+1]][res[k]] = -1
+        tmpnd.clear()
+    return matp
+
+def inv_numeri(x,y):
+    return y-x
+
+def sort_nodi_for_visit(list_nodi):
+    lord = []  # lista ordinata
+    vtmp = 0
+    tmp = []
+    ind=0
+    for i in range(0,len(list_nodi)):
+        tmp.append(list_nodi[i].visita)
+    tmp=bubble_sort(tmp)
+    for i in range(0, len(list_nodi)):
+        for j in range(0,len(list_nodi)):
+            if tmp[i] == list_nodi[j].visita :
+                ind = list_nodi[j].idN
+        lord.append(ind)
+    return lord
+
+def bubble_sort(l):
+    ll = len(l)
+    for i in range(0,ll):
+        for j in range(ll-1):
+            if l[j] < l[j+1]:
+                t = l[j+1]
+                l[j+1] = l[j]
+                l[j] = t
+    return l
+
+
+# TODO : Rifare ciclo creazione matrice ai nodi piu pesanti dello stesso paziente,0 nessun legame 1va in  -1 riceve
+# TODO :P
+def process(lists, listp, durataTest):
     mp, ms = set_the_mat(lists, listp)
 
     # stampa_matrici(mp,"paziente","visita")
@@ -173,7 +279,8 @@ def process(lists, listp,durataTest):
     mstart = create_mat(nodi)
 
     # crea la soluzione e poi crea matrice bool
-    matp = create_initial_sol(mstart, nodi, ms)
+    # matp = create_initial_sol(mstart, nodi, ms)
+    matp = initial_sol(mstart, nodi, ms, listp)
     stampa3(matp)
     mstartbool = create_mat_bool(nodi)
     print("\nStampa Matrice Booleana: ")
@@ -184,5 +291,5 @@ def process(lists, listp,durataTest):
     print("\nStampa di una possibile soluzione: ")
     stampa3(soluzione)
 
-    makespan = critical_path(soluzione,nodi,durataTest)
-    print("\nMakespan è: "+str(makespan))
+    makespan = critical_path(soluzione, nodi, durataTest)
+    print("\nMakespan è: " + str(makespan))
