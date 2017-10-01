@@ -191,6 +191,7 @@ def create_initial_sol(matp, nodi, mats):
     return matp
 
 
+
 def initial_sol(matp, nodi, mats, listp):
     # assegno pazienti da salette e scelgo il nodo iniziale
     fst_nd = []  # primi nodi
@@ -238,8 +239,7 @@ def initial_sol(matp, nodi, mats, listp):
         tmpnd.clear()
     return matp
 
-def inv_numeri(x,y):
-    return y-x
+
 
 def sort_nodi_for_visit(list_nodi):
     lord = []  # lista ordinata
@@ -267,8 +267,10 @@ def bubble_sort(l):
     return l
 
 
-# TODO : Rifare ciclo creazione matrice ai nodi piu pesanti dello stesso paziente,0 nessun legame 1va in  -1 riceve
-# TODO :P
+# 0 nessun legame
+# 1va in
+# -1 riceve
+
 def process(lists, listp, durataTest):
     mp, ms = set_the_mat(lists, listp)
 
