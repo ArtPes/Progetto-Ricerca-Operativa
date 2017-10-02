@@ -6,10 +6,12 @@ class Paziente:
     test_array = ''
     saletta = None
 
+
     def __init__(self, line):
         self.id = int(line.split(None, 1)[0])
         test = line.split(None, 1)[1]
         self.test_array = test
+
 
     def somma_durata_singolo(paziente):
         # durate di ogni singolo test
@@ -123,8 +125,19 @@ class UnorderedList:
         else:
             previous.setNext(current.getNext())
 
+
     def getFirst(self):
         item = self.head
         return item
 
 # -------------------------------------------------------------------------------------
+
+class Arco:
+    visita = 0
+    primo_estremo = 0
+    secondo_estremo = 0
+
+    def __init__(self, test, primo_estremo, secondo_estremo):
+        self.visita = test + 1
+        self.primo_estremo = primo_estremo
+        self.secondo_estremo = secondo_estremo

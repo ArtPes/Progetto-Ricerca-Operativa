@@ -42,14 +42,24 @@ def crea_nodo(mp):
             nodi.append(nd)
     nd = Nodo(numn + 1, 0, 0)
     nodi.append(nd)
+    #stampa nodi per creare grafo a mano easy
+    for nd in nodi:
+        print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita+1) + ")")
 
     return nodi, numn
 
 
 def stampa3(matr):
-    print("\n")
     for i in range(0, len(matr)):
         print(i, end="   ", flush=True)
+    print("\r")
+    for i in range(0, len(matr)):
+        print(str(i) + "  " + str(matr[i]))
+
+def stampa_bool(matrix):
+    matr = copia_grafo_booleano(matrix,len(matrix))
+    for i in range(0, len(matr)):
+        print(" -  "+str(i), end="", flush=True)
     print("\r")
     for i in range(0, len(matr)):
         print(str(i) + "  " + str(matr[i]))
@@ -70,23 +80,24 @@ def create_mat_bool(nodi):
     '''
     for i in range(0, len(nodi)):
         for j in range(0, len(nodi)):
-            if i == j or (nodi[i].idP != nodi[j].idP and nodi[i].visita != nodi[j].visita):
+            if nodi[i].visita != -1: #nodi con valore visita -1 ossia nodi di start ed end
                 matbool[i][j] = False
-                # TODO : caso di più pazienti per saletta
-            else:
+            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:# nodi che condividono lo stesso test possono hanno archi disgiuntivi
                 matbool[i][j] = True
+            else:
+                matbool[i][j] = False #tutto il resto a false perchè non è variabile
 
     # tutti nodi sono collegati a quello di partenza
-    for i in range(1, len(nodi) - 1):
-        matbool[0][i] = True
+    '''for i in range(1, len(nodi) - 1):
+        matbool[0][i] = False
 
     # tutti nodi sono collegati a quello di fine
     for i in range(1, len(nodi) - 1):
-        matbool[i][len(nodi) - 1] = True
+        matbool[i][len(nodi) - 1] = False
 
     # impongo che nodo partenza e nodo arrivo non possono essere uguali
     matbool[0][len(nodi) - 1] = False
-    matbool[len(nodi) - 1][0] = False
+    matbool[len(nodi) - 1][0] = False'''
 
     return matbool
 
@@ -191,7 +202,6 @@ def create_initial_sol(matp, nodi, mats):
     return matp
 
 
-
 def initial_sol(matp, nodi, mats, listp):
     # assegno pazienti da salette e scelgo il nodo iniziale
     fst_nd = []  # primi nodi
@@ -223,46 +233,46 @@ def initial_sol(matp, nodi, mats, listp):
 
     # ordino i nodi escludendo il nodo 0 e len-2 che quindi e' l ultimo
     tmpnd = []
-    res=[]
+    res = []
     for i in range(0, len(listp)):
         for j in range(0, len(nodi)):
             if i + 1 == nodi[j].idP:
                 tmpnd.append(nodi[j])
 
         res = sort_nodi_for_visit(tmpnd)
-        lres=len(res)-1
+        lres = len(res) - 1
         print(res)
         for k in range(0, len(res)):
-            if k<lres:
-                matp[res[k]][res[k+1]] = 1
-                matp[res[k+1]][res[k]] = -1
+            if k < lres:
+                matp[res[k]][res[k + 1]] = 1
+                matp[res[k + 1]][res[k]] = -1
         tmpnd.clear()
     return matp
-
 
 
 def sort_nodi_for_visit(list_nodi):
     lord = []  # lista ordinata
     vtmp = 0
     tmp = []
-    ind=0
-    for i in range(0,len(list_nodi)):
-        tmp.append(list_nodi[i].visita)
-    tmp=bubble_sort(tmp)
+    ind = 0
     for i in range(0, len(list_nodi)):
-        for j in range(0,len(list_nodi)):
-            if tmp[i] == list_nodi[j].visita :
+        tmp.append(list_nodi[i].visita)
+    tmp = bubble_sort(tmp)
+    for i in range(0, len(list_nodi)):
+        for j in range(0, len(list_nodi)):
+            if tmp[i] == list_nodi[j].visita:
                 ind = list_nodi[j].idN
         lord.append(ind)
     return lord
 
+
 def bubble_sort(l):
     ll = len(l)
-    for i in range(0,ll):
-        for j in range(ll-1):
-            if l[j] < l[j+1]:
-                t = l[j+1]
-                l[j+1] = l[j]
+    for i in range(0, ll):
+        for j in range(ll - 1):
+            if l[j] < l[j + 1]:
+                t = l[j + 1]
+                l[j + 1] = l[j]
                 l[j] = t
     return l
 
@@ -284,14 +294,19 @@ def process(lists, listp, durataTest):
     # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
     stampa3(matp)
+    #crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
     print("\nStampa Matrice Booleana: ")
-    stampa3(mstartbool)
+    #stampa3(mstartbool)
+    stampa_bool(mstartbool)
 
     # crea una prima soluzione possibile
     soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
     print("\nStampa di una possibile soluzione: ")
     stampa3(soluzione)
 
-    makespan = critical_path(soluzione, nodi, durataTest)
+    makespan = critical_path(soluzione, nodi)
     print("\nMakespan è: " + str(makespan))
+
+    print("\n TABU SEARCH")
+    tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
