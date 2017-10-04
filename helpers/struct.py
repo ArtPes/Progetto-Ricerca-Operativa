@@ -137,7 +137,34 @@ class Arco:
     primo_estremo = 0
     secondo_estremo = 0
 
-    def __init__(self, test, primo_estremo, secondo_estremo):
-        self.visita = test + 1
+    def __init__(self, visita, primo_estremo, secondo_estremo):
+        self.visita = visita + 1
         self.primo_estremo = primo_estremo
         self.secondo_estremo = secondo_estremo
+
+#---------------------------------------------------------------------------------------
+
+class Mossa:
+    tipo = ''
+    macchina = 0
+    primo_indice_primo_arco = 0
+    secondo_indice_primo_arco = 0
+    primo_indice_secondo_arco = 0
+    secondo_indice_secondo_arco = 0
+
+    def __init__(self, tipo, m, pipa, sipa, pisa, sisa):
+        self.tipo = tipo
+        self.macchina = m
+        self.primo_indice_primo_arco = pipa
+        self.secondo_indice_primo_arco = sipa
+        self.primo_indice_secondo_arco = pisa
+        self.secondo_indice_secondo_arco = sisa
+
+#-----------------------------------------------------------------------------------------
+
+class Solution:
+
+    def __init__(self,grafo,makespan,Mossa):
+        self.grafo = grafo
+        self.makespan = makespan
+        self.Mossa = Mossa

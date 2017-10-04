@@ -309,4 +309,7 @@ def process(lists, listp, durataTest):
     print("\nMakespan è: " + str(makespan))
 
     print("\n TABU SEARCH")
-    tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
+    sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
+
+    print("\n")
+    print("MAKESPAN FINALE: "+ str(sol.makespan))
