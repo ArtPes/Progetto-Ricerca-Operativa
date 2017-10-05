@@ -6,12 +6,10 @@ class Paziente:
     test_array = ''
     saletta = None
 
-
     def __init__(self, line):
         self.id = int(line.split(None, 1)[0])
         test = line.split(None, 1)[1]
         self.test_array = test
-
 
     def somma_durata_singolo(paziente):
         # durate di ogni singolo test
@@ -125,10 +123,10 @@ class UnorderedList:
         else:
             previous.setNext(current.getNext())
 
-
     def getFirst(self):
         item = self.head
         return item
+
 
 # -------------------------------------------------------------------------------------
 
@@ -142,7 +140,8 @@ class Arco:
         self.primo_estremo = primo_estremo
         self.secondo_estremo = secondo_estremo
 
-#---------------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------------------
 
 class Mossa:
     tipo = ''
@@ -160,11 +159,11 @@ class Mossa:
         self.primo_indice_secondo_arco = pisa
         self.secondo_indice_secondo_arco = sisa
 
-#-----------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------
 
 class Solution:
-
-    def __init__(self,grafo,makespan,Mossa):
+    def __init__(self, grafo, makespan, Mossa):
         self.grafo = grafo
         self.makespan = makespan
         self.Mossa = Mossa

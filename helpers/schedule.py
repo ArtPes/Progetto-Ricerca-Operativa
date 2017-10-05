@@ -225,7 +225,7 @@ def initial_sol(matp, nodi, mats, listp):
         min_tmp = 9
         for j in range(0, len(matp)):
             if nodi[j].idP == lst_nd[i] and min_tmp > nodi[j].visita:
-                print("//////////////////")
+                #print("//////////////////")
                 min_tmp = nodi[j].visita
                 ind = nodi[j].idN
         matp[len(matp[j]) - 1][ind] = -1
@@ -241,7 +241,7 @@ def initial_sol(matp, nodi, mats, listp):
 
         res = sort_nodi_for_visit(tmpnd)
         lres = len(res) - 1
-        print(res)
+        #print(res)
         for k in range(0, len(res)):
             if k < lres:
                 matp[res[k]][res[k + 1]] = 1
@@ -293,7 +293,7 @@ def process(lists, listp, durataTest):
     # crea la soluzione e poi crea matrice bool
     # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
-    stampa3(matp)
+    #stampa3(matp)
     #crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
     print("\nStampa Matrice Booleana: ")
@@ -308,8 +308,9 @@ def process(lists, listp, durataTest):
     makespan = critical_path(soluzione, nodi)
     print("\nMakespan è: " + str(makespan))
 
-    print("\n TABU SEARCH")
+    print("\n TABU SEARCH\n")
     sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
 
-    print("\n")
-    print("MAKESPAN FINALE: "+ str(sol.makespan))
+    #print("\nGrafo finale: ")
+    #stampa3(sol.grafo)
+    #print("\nMAKESPAN FINALE: "+ str(sol.makespan))

@@ -75,7 +75,7 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
     print("\nMassimo makespan è:" + str(max_makespan))
     aciclico = check_aciclico(grafo_new, durate, lista_nodi, max_makespan)
     if aciclico:
-        print("\nNon è ciclico, soluzione ok!")
+        print("\nNon è ciclico, si può procedere")
     else:
         print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
 
@@ -226,7 +226,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
         # se è aciclico calcolo il makespan
         if (aciclico):
             makespan_temp = critical_path(grafo2, nodi)
-            print("makespan_temp_swap: " + str(makespan_temp))
+            print("S_Makespan : " + str(makespan_temp))
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
             if mossa_temp in tabu_list:
@@ -316,7 +316,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
                 aciclico = check_aciclico(grafo_temporaneo, durate, nodi, max_makespan)
                 if (aciclico):
                     makespan_temporaneo = critical_path(grafo_temporaneo, nodi)
-                    print("makespan_temp_remove: " + str(makespan_temporaneo))
+                    print("Makespan remove: " + str(makespan_temporaneo))
                     if makespan_temporaneo < makespan_precedente:
                         if not tabu_list.contains(mossa_temp):
                             nessuna_mossa = False
@@ -375,7 +375,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
         archi_esistenti = []
         archi_esistenti = trova_archi_esistenti(nodi, len(nodi), grafo_disgiuntivo, archi_da_decidere, grafo_partenza)
 
-        print("\n")
+
         for a in archi_esistenti:
             print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
 
@@ -413,7 +413,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
 
                 elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
                     print("Ho scelto la mossa: ")
-                    # print("[" + s.getMossa().getTipo() + " " + s.getMossa().getMacchina() + " " + s.getMossa().getPipa() + " " + s.getMossa().getSipa() + " " + s.getMossa().getPisa() + " " + s.getMossa().getSisa() + "]")
+                    print("[" + s.Mossa.tipo + " " + s.Mossa.m + " " + s.Mossa.pipa + " " + s.Mossa.sipa + " " + s.Mossa.pisa + " " + s.Mossa.sisa + "]")
                     makespan = makespan_temp_s
                     grafo_partenza = copia_grafo(s.grafo, len(nodi))
 
