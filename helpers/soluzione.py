@@ -210,7 +210,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
                     grafo2[temp.primo_estremo][temp.secondo_estremo] = 1
                     grafo2[temp.secondo_estremo][temp.primo_estremo] = -1
 
-        ok = True;
+        ok = True
         # verifico che questa mossa non abbia infranto la condizione che gli archi entranti e gli archi uscenti
         # di ogni nodo devono essere al max 2
         for k in range(1, len(nodi) - 1):
@@ -226,7 +226,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
         # se è aciclico calcolo il makespan
         if (aciclico):
             makespan_temp = critical_path(grafo2, nodi)
-            print("S_Makespan : " + str(makespan_temp))
+            #print("S_Makespan : " + str(makespan_temp))
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
             if mossa_temp in tabu_list:
@@ -411,9 +411,9 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                     tabu_list.remove(index)
                     tabu_list.append(inversa)
 
-                elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
-                    print("Ho scelto la mossa: ")
-                    print("[" + s.Mossa.tipo + " " + s.Mossa.m + " " + s.Mossa.pipa + " " + s.Mossa.sipa + " " + s.Mossa.pisa + " " + s.Mossa.sisa + "]")
+            elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
+                    #print("Ho scelto la mossa: ")
+                    #print("[" + s.Mossa.tipo + " " + s.Mossa.m + " " + s.Mossa.pipa + " " + s.Mossa.sipa + " " + s.Mossa.pisa + " " + s.Mossa.sisa + "]")
                     makespan = makespan_temp_s
                     grafo_partenza = copia_grafo(s.grafo, len(nodi))
 

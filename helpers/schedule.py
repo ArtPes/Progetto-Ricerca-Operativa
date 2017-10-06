@@ -304,13 +304,22 @@ def process(lists, listp, durataTest):
     soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
     print("\nStampa di una possibile soluzione: ")
     stampa3(soluzione)
-
+    '''
+    calcolo il makespan della soluzione_iniziale utilizzando un algoritmo di label correcting 
+    adattato alla ricerca del critical path di un grafo:
+    la condizione di bellman utilizzata per l'aggiornamento della label del costo 
+    è C(nodo_precedente)+D(nodo_precedente)>C(nodo_attuale)
+    con C(i) costo del percorso fino al nodo i e D(i) durata dell'operazione del nodo i
+    il makespan è ottenuto andando a isolare C(nodo_finale) al termine dell'algoritmo
+    a differenza dell'algoritmo di label correcting per shortest path, non tengo in memoria i predecessori
+    dei nodi perchè non sono interessato a qual'è il critical path ma solo al suo valore
+    '''
     makespan = critical_path(soluzione, nodi)
     print("\nMakespan è: " + str(makespan))
 
     print("\n TABU SEARCH\n")
     sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
 
-    #print("\nGrafo finale: ")
-    #stampa3(sol.grafo)
-    #print("\nMAKESPAN FINALE: "+ str(sol.makespan))
+    print("\nGrafo finale: ")
+    stampa3(sol.grafo)
+    print("\nMAKESPAN FINALE: "+ str(sol.makespan))
