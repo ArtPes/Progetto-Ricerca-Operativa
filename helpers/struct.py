@@ -9,19 +9,35 @@ class Paziente:
     def __init__(self, line):
         self.id = int(line.split(None, 1)[0])
         test = line.split(None, 1)[1]
-        self.test_array = test
+        self.test_array = self.set_test(test)
 
     def somma_durata_singolo(paziente):
         # durate di ogni singolo test
         durate = [1, 2, 4, 6, 8]
         tot = 0
-        test = list(paziente.test_array)
-        for t in range(0, 5):
-            n = int(test[t])
+        test = paziente.test_array
+        for t in range(0, len(test)):
+            n = test[t]
             tot = tot + n * durate[t]
 
         return tot
 
+    # data la stringa di test "10101" la trasforma in un array che contiene
+    #  i numeri dei test da effetturare es. 01010 = [2,4]
+    def set_test(self,listp):
+        test = list(listp)
+        a = 1
+        lista_test = []
+
+        for i in range(0, 5):
+            t = int(test[i])
+            n = t * a
+            lista_test.append(n)
+            a += 1
+
+        lista_test = [x for x in lista_test if x != 0]
+
+        return lista_test
 
 # -------------------------------------------------------------------------------------
 class Nodo:
@@ -167,3 +183,23 @@ class Solution:
         self.grafo = grafo
         self.makespan = makespan
         self.Mossa = Mossa
+
+
+# ------------------------------------------------------------------------------------------
+
+class Task:
+    def __init__(self,paziente,sala,test,start,end):
+        self.paziente = paziente
+        self.sala = sala
+        self.test = test
+        self.start = start
+        self.end = end
+        self.durata = self.calcola_durata(test)
+
+    def calcola_durata(self,test):
+        durate = [1,2,4,6,8]
+
+        for i in range(0,len(durate)):
+            if i == test:
+                return durate[i]
+

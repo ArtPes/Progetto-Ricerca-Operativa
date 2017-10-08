@@ -1,5 +1,3 @@
-from helpers.utils import *
-from helpers.struct import *
 from helpers.soluzione import *
 
 
@@ -19,7 +17,7 @@ def set_the_mat(lists, listp):
 
     for i in range(0, len(listp)):
         id = listp[i].id
-        test = set_test(listp[i].test_array)
+        test = listp[i].test_array
         sala = listp[i].saletta
         newlistp.append(test)
 
@@ -42,9 +40,9 @@ def crea_nodo(mp):
             nodi.append(nd)
     nd = Nodo(numn + 1, 0, 0)
     nodi.append(nd)
-    #stampa nodi per creare grafo a mano easy
-    for nd in nodi:
-        print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita+1) + ")")
+    # stampa nodi per creare grafo a mano easy
+    # for nd in nodi:
+    #    print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita+1) + ")")
 
     return nodi, numn
 
@@ -56,10 +54,11 @@ def stampa3(matr):
     for i in range(0, len(matr)):
         print(str(i) + "  " + str(matr[i]))
 
+
 def stampa_bool(matrix):
-    matr = copia_grafo_booleano(matrix,len(matrix))
+    matr = copia_grafo_booleano(matrix, len(matrix))
     for i in range(0, len(matr)):
-        print(" -  "+str(i), end="", flush=True)
+        print(" -  " + str(i), end="", flush=True)
     print("\r")
     for i in range(0, len(matr)):
         print(str(i) + "  " + str(matr[i]))
@@ -80,25 +79,13 @@ def create_mat_bool(nodi):
     '''
     for i in range(0, len(nodi)):
         for j in range(0, len(nodi)):
-            if nodi[i].visita != -1: #nodi con valore visita -1 ossia nodi di start ed end
+            if nodi[i].visita != -1:  # nodi con valore visita -1 ossia nodi di start ed end
                 matbool[i][j] = False
-            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:# nodi che condividono lo stesso test possono hanno archi disgiuntivi
+            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[
+                j].visita:  # nodi che condividono lo stesso test possono hanno archi disgiuntivi
                 matbool[i][j] = True
             else:
-                matbool[i][j] = False #tutto il resto a false perchè non è variabile
-
-    # tutti nodi sono collegati a quello di partenza
-    '''for i in range(1, len(nodi) - 1):
-        matbool[0][i] = False
-
-    # tutti nodi sono collegati a quello di fine
-    for i in range(1, len(nodi) - 1):
-        matbool[i][len(nodi) - 1] = False
-
-    # impongo che nodo partenza e nodo arrivo non possono essere uguali
-    matbool[0][len(nodi) - 1] = False
-    matbool[len(nodi) - 1][0] = False'''
-
+                matbool[i][j] = False  # tutto il resto a false perchè non è variabile
     return matbool
 
 
@@ -225,7 +212,7 @@ def initial_sol(matp, nodi, mats, listp):
         min_tmp = 9
         for j in range(0, len(matp)):
             if nodi[j].idP == lst_nd[i] and min_tmp > nodi[j].visita:
-                #print("//////////////////")
+                # print("//////////////////")
                 min_tmp = nodi[j].visita
                 ind = nodi[j].idN
         matp[len(matp[j]) - 1][ind] = -1
@@ -241,7 +228,7 @@ def initial_sol(matp, nodi, mats, listp):
 
         res = sort_nodi_for_visit(tmpnd)
         lres = len(res) - 1
-        #print(res)
+        # print(res)
         for k in range(0, len(res)):
             if k < lres:
                 matp[res[k]][res[k + 1]] = 1
@@ -280,7 +267,6 @@ def bubble_sort(l):
 # 0 nessun legame
 # 1va in
 # -1 riceve
-
 def process(lists, listp, durataTest):
     mp, ms = set_the_mat(lists, listp)
 
@@ -293,17 +279,17 @@ def process(lists, listp, durataTest):
     # crea la soluzione e poi crea matrice bool
     # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
-    #stampa3(matp)
-    #crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
-    mstartbool = create_mat_bool(nodi)
-    print("\nStampa Matrice Booleana: ")
-    #stampa3(mstartbool)
-    stampa_bool(mstartbool)
+    # stampa3(matp)
+    # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
+    # mstartbool = create_mat_bool(nodi)
+    # print("\nStampa Matrice Booleana: ")
+    # stampa3(mstartbool)
+    # stampa_bool(mstartbool)
 
     # crea una prima soluzione possibile
-    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
-    print("\nStampa di una possibile soluzione: ")
-    stampa3(soluzione)
+    # soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
+    # print("\nStampa di una possibile soluzione: ")
+    # stampa3(soluzione)
     '''
     calcolo il makespan della soluzione_iniziale utilizzando un algoritmo di label correcting 
     adattato alla ricerca del critical path di un grafo:
@@ -314,12 +300,97 @@ def process(lists, listp, durataTest):
     a differenza dell'algoritmo di label correcting per shortest path, non tengo in memoria i predecessori
     dei nodi perchè non sono interessato a qual'è il critical path ma solo al suo valore
     '''
-    makespan = critical_path(soluzione, nodi)
-    print("\nMakespan è: " + str(makespan))
 
-    print("\n TABU SEARCH\n")
-    sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
+    # makespan = critical_path(soluzione, nodi)
+    # print("\nMakespan è: " + str(makespan))
 
-    print("\nGrafo finale: ")
-    stampa3(sol.grafo)
-    print("\nMAKESPAN FINALE: "+ str(sol.makespan))
+    # print("\n TABU SEARCH\n")
+    # sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
+
+    # print("\nGrafo finale: ")
+    # stampa3(sol.grafo)
+    # print("\nMAKESPAN FINALE: "+ str(sol.makespan))
+
+
+    # bazza del check dei task relativi ai pazienti
+    # i test non si sovrappongono
+    lista_task = insert_task(listp)
+    check_gantt(lista_task)
+
+
+def check_gantt(lista_task):
+    time = 0
+
+    # metto i task in un array che definisce la sala in cui sono cosi facilito i vincoli tra pazienti nelle salette
+    sala1 = []
+    sala2 = []
+    sala3 = []
+
+    for i in range(0, len(lista_task)):
+        if lista_task[i].sala == 1:
+            sala1.append(lista_task[i])
+        if lista_task[i].sala == 2:
+            sala2.append(lista_task[i])
+        if lista_task[i].sala == 3:
+            sala3.append(lista_task[i])
+    # vincoli start-end tra pazienti della stessa sala
+    vincoli_tra_paz_stessa_sala(sala1)
+    vincoli_tra_paz_stessa_sala(sala2)
+    vincoli_tra_paz_stessa_sala(sala3)
+
+    # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
+
+    vincoli_tra_paz_diversa_sala(sala1,sala2,sala3)
+
+
+
+    for i in sala1:
+        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+            i.start) + " End: " + str(i.end))
+    for i in sala2:
+        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+            i.start) + " End: " + str(i.end))
+    for i in sala3:
+        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+            i.start) + " End: " + str(i.end))
+
+
+
+def vincoli_tra_paz_diversa_sala(lista1,lista2,lista3):
+
+    for i in range(0,len(lista1)):
+        for j in range(0,len(lista2)):
+                 if lista1[i].test == lista2[j].test:
+                     shift_list(lista2,lista1[i].durata)
+                 #if lista1[i].test == lista3[j].test:
+
+
+def shift_list(list,shift):
+
+    for i in range(0,len(list)):
+        list[i].start = list[i].start + shift
+        list[i].end = list[i].end + shift
+
+def vincoli_tra_paz_stessa_sala(sala):
+    for i in range(0, len(sala)):
+        sala[i].end = sala[i].start + sala[i].durata
+        if i < (len(sala) - 1):  # se non sono arrivato all'ultimo task
+            if sala[i + 1]:  # se vi è un task dopo, questo deve iniziare alal fine di quello prima
+                sala[i + 1].start = sala[i].end
+
+def insert_task(listp):
+    list_task = []
+    # creo il task relativo a ogni paziente
+    for i in range(0, len(listp)):
+        task = crea_task(listp[i])
+        list_task = task + list_task
+    return list_task
+
+# per ogni paziente, per ogni suo test, crea un task
+def crea_task(paziente):
+    tasks_paziente = []
+    for i in paziente.test_array:
+        task = Task(paziente.id, paziente.saletta, i, 0, 0)
+        tasks_paziente.append(task)
+        # print("\n Paziente: " + str(task.paziente) + " Sala: " + str(task.sala) + " Test: " + str(task.test))
+    return tasks_paziente

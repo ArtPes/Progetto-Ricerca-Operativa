@@ -1,4 +1,3 @@
-
 import threading
 from helpers.struct import *
 from helpers.schedule import *
@@ -8,7 +7,7 @@ from helpers.first_fit_decreasing import *
 if __name__ == "__main__":
 
     out_lck = threading.Lock()
-    durataTest = [1,2,4,6,8]
+    durataTest = [1, 2, 4, 6, 8]
     while True:
         # Main Menu
         main_menu = loop_menu(out_lck, "\nSelect one of the following actions ('e' to exit): ",
@@ -26,21 +25,20 @@ if __name__ == "__main__":
 
             sala1, sala2, sala3 = inserimento_sala(listp)
             lists = []
-            for i in range (0,3):
-                if i==0:
+            for i in range(0, 3):
+                if i == 0:
                     lists.append(sala1)
-                if i==1:
+                if i == 1:
                     lists.append(sala2)
-                if i==2:
+                if i == 2:
                     lists.append(sala3)
+            # può capitare che metta solo pazienti in due sale
+            if not sala1 or not sala2 or not sala3:
+                print("Errore, no pazienti in una sala!!")
+                stampa_info_paziente(listp)
+                break
 
             stampa_info_paziente(listp)
-            #output(out_lck, "Saletta 1: " + str(sala1))
-            #output(out_lck, "Saletta 2: " + str(sala2))
-            #output(out_lck, "Saletta 3: " + str(sala3))
-            # show info dei pazienti
-            #stampa_info_saletta(lists)
-            #stampa_info_paziente(listp)
             process(lists, listp, durataTest)
 
         elif main_menu == 2:
@@ -49,7 +47,7 @@ if __name__ == "__main__":
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
-            lists= []
+            lists = []
             # inserimento random nelle sale
             sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
             for i in range(0, 3):
@@ -59,11 +57,7 @@ if __name__ == "__main__":
                     lists.append(sala2)
                 if i == 2:
                     lists.append(sala3)
-            #output(out_lck, "Saletta 1: " + str(sala1))
-            #output(out_lck, "Saletta 2: " + str(sala2))
-            #output(out_lck, "Saletta 3: " + str(sala3))
-            #stampa_info_saletta(lists)
-            # show info dei pazienti
+
             stampa_info_paziente(listp)
 
             process(lists, listp, durataTest)

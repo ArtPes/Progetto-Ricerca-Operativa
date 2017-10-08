@@ -70,7 +70,6 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
     for i in range(0, 5):
         if durate[i] > max:
             max = durate[i]
-
     max_makespan = max * len_nodi
     print("\nMassimo makespan è:" + str(max_makespan))
     aciclico = check_aciclico(grafo_new, durate, lista_nodi, max_makespan)
