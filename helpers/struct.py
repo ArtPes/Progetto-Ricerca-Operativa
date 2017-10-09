@@ -188,18 +188,18 @@ class Solution:
 # ------------------------------------------------------------------------------------------
 
 class Task:
-    def __init__(self,paziente,sala,test,start,end):
+    def __init__(self,paziente,sala,test,start):
         self.paziente = paziente
         self.sala = sala
         self.test = test
         self.start = start
-        self.end = end
+        self.end = start + self.calcola_durata(test)
         self.durata = self.calcola_durata(test)
 
     def calcola_durata(self,test):
         durate = [1,2,4,6,8]
 
         for i in range(0,len(durate)):
-            if i == test:
+            if i == test-1:
                 return durate[i]
 
