@@ -193,7 +193,9 @@ class Task:
         self.sala = sala
         self.test = test
         self.start = start
-        self.end = start + self.calcola_durata(test)
+        #ho messo a 110 perchè mi serve un valore che non sia possibile superare da ttot nel ciclo
+        self.end=110
+        #self.end = start + self.calcola_durata(test)
         self.durata = self.calcola_durata(test)
 
     def calcola_durata(self,test):

@@ -1,5 +1,5 @@
 from helpers.soluzione import *
-
+import time
 
 def list_to_mat(list):
     mat = []
@@ -315,8 +315,8 @@ def process(lists, listp, durataTest):
     # bazza del check dei task relativi ai pazienti
     # i test non si sovrappongono
     lista_task = insert_task(listp)
-    check_gantt(lista_task)
 
+    ts1,ts2,ts3= check_gantt(lista_task)
 
 def check_gantt(lista_task):
     time = 0
@@ -333,10 +333,13 @@ def check_gantt(lista_task):
             sala2.append(lista_task[i])
         if lista_task[i].sala == 3:
             sala3.append(lista_task[i])
+
+    black_box(sala1 , sala2 , sala3)
+
     # vincoli start-end tra pazienti della stessa sala
-    vincoli_tra_paz_stessa_sala(sala1,0)
-    vincoli_tra_paz_stessa_sala(sala2,0)
-    vincoli_tra_paz_stessa_sala(sala3,0)
+    #vincoli_tra_paz_stessa_sala(sala1,0)
+    #vincoli_tra_paz_stessa_sala(sala2,0)
+    #vincoli_tra_paz_stessa_sala(sala3,0)
 
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
 
@@ -353,7 +356,7 @@ def check_gantt(lista_task):
     for i in sala3:
         print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
             i.start) + " End: " + str(i.end))
-
+    return sala1,sala2,sala3
 
 
 def vincolo_tra_test_uguali(lista1,lista2,lista3):
@@ -439,3 +442,362 @@ def crea_task(paziente):
         tasks_paziente.append(task)
         # print("\n Paziente: " + str(task.paziente) + " Sala: " + str(task.sala) + " Test: " + str(task.test))
     return tasks_paziente
+
+
+def black_box(ts1,ts2,ts3):
+    ttot=0 #tempo totale esecuzione
+    # #tempi totali per ogni saletta
+    tt1=0
+    tt2=0
+    tt3=0
+    check_box= False
+    # lock per test -->mutua esclusione
+    t1=False
+    t2=False
+    t3=False
+    t4=False
+    t5=False
+    lock = [] #a che saletta do il lock  -->a chi do la mutua esclusione
+    #contatori 3 salette
+    c1=0
+    c2=0
+    c3=0
+    # contatori 3 salette temporanei
+    c1t= 0
+    c2t= 0
+    c3t= 0
+    #setto una variabile per ogni saletta se sta facendo un test in maniera
+    #da poter incrementare il tempo di uno puramente nel caso sia in idle
+    idles1=False
+    idles2=False
+    idles3=False
+    #Inizializzo i lock
+    for i in range (0,5):
+        lock.append('')
+
+    #idles1,idles2,idles3=False
+    while check_box is False:
+        #check_box variabile che mi serve per ciclare(finche' tutti e 3 gli indici son stati esauriti rimane a false)
+        #controllo per lunghezza task ts1
+
+        #                           ----------- SALA 1 --------
+        if c1<len(ts1):
+            tt1 += 1
+            # ------------          test 1 per task sala 1      -------
+            if ts1[c1t].test==1:
+                #if t1==True and lock[0]!="s1" and idles1==False:
+                    #tt1+=1
+                if t1 == True and lock[0]=="s1":
+                    if ttot >= ts1[c1].end:
+                        lock[0]=''
+                        t1=False
+                        c1+=1
+                        idles1=False
+                elif t1== False:
+                    if ts1[c1].test == 1: #reinserisco il controllo perchè mi rifarebbe la stessa visita
+                        ts1[c1].start=ttot
+                        ts1[c1].end = ttot+1
+                        #tt1+=1
+                        t1=True
+                        lock[0]="s1"
+                        idles1=True
+            # ------------          test 2 per task sala 1      -------
+            if ts1[c1t].test==2:
+                #if t2==True and lock[1]!="s1" and idles1==False :
+                    #tt1+=1
+                if t2 == True and lock[1]=="s1":
+                    if ttot >= ts1[c1].end:
+                        lock[1]=''
+                        t2=False
+                        c1+=1
+                        idles1=False
+                elif t2== False:
+                    if ts1[c1].test == 2:
+                        ts1[c1].start=ttot
+                        ts1[c1].end = ttot + 2
+                        #tt1 +=2
+                        t2=True
+                        lock[1]="s1"
+                        idles1=True
+            # ------------          test 3 per task sala 1      -------
+            if ts1[c1t].test==3:
+                #if t3==True and lock[2]!="s1" and idles1==False:
+                #tt1 +=1
+                if t3 == True and lock[2]=="s1":
+                    if ttot >= ts1[c1].end:
+                        lock[2]=''
+                        t3=False
+                        c1+=1
+                        idles1=False
+                elif t3== False:
+                    if ts1[c1].test == 3:
+                        ts1[c1].start=ttot
+                        ts1[c1].end = ttot + 4
+                        #tt1 +=4
+                        t3=True
+                        lock[2]="s1"
+                        idles1=True
+            # ------------          test 4 per task sala 1      -------
+            if ts1[c1t].test==4:
+                #if t4==True and lock[3]!="s1" and idles1==False:
+                #tt1 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t4 == True and lock[3]=="s1":
+                    if ttot >= ts1[c1].end:
+                        lock[3]=''
+                        t4=False
+                        c1+=1
+                        idles1=False
+                elif t4== False:
+                    if ts1[c1].test == 4:
+                        ts1[c1].start=ttot
+                        ts1[c1].end = ttot + 6
+                        #tt1 +=6
+                        t4=True
+                        lock[3]="s1"
+                        idles1=True
+            # ------------          test 5 per task sala 1      -------
+            if ts1[c1t].test==5:
+                #if t5 ==True and lock[4]!="s1" and idles1==False:
+                #tt1 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t5 == True and lock[4]=="s1":
+                    if ttot >= ts1[c1].end:
+                        lock[4]=''
+                        t5=False
+                        c1+=1
+                        idles1=False
+                elif t5== False:
+                    if ts1[c1].test == 5:
+                        ts1[c1].start=ttot
+                        ts1[c1].end = ttot + 8
+                        #tt1 +=8
+                        t5=True
+                        lock[4]="s1"
+                        idles1=True
+        #                           ----------- SALA 2 --------
+        if c2<len(ts2):
+            tt2+=1
+            # ------------          test 1 per task sala 2      -------
+            if ts2[c2t].test==1:
+                #if t1==True and lock[0]!="s2" and idles2==False:
+                #tt2+=1
+                if t1 == True and lock[0]=="s2":
+                    if ttot >= ts2[c2].end:
+                        lock[0]=''
+                        t1=False
+                        c2+=1
+                        idles2=False
+                elif t1== False:
+                    if ts2[c2].test == 1:
+                        #reinserisco il controllo perchè mi rifarebbe la stessa visita
+                        ts2[c2].start=ttot
+                        ts2[c2].end = ttot + 1
+                        #tt2 +=1
+                        t1=True
+                        lock[0]="s2"
+                        idles2=True
+            # ------------          test 2 per task sala 2      -------
+            if ts2[c2t].test==2:
+                #if t2==True and lock[1]!="s2" and idles2==False:
+                #tt2 +=1
+                if t2 == True and lock[1]=="s2":
+                    if ttot >= ts2[c2].end:
+                        lock[1]=''
+                        t2=False
+                        c2+=1
+                        idles2=False
+                elif t2== False:
+                    if ts2[c2].test == 2:
+                        ts2[c2].start=ttot
+                        ts2[c2].end = ttot + 2
+                        #tt2 +=2
+                        t2=True
+                        lock[1]="s2"
+                        idles2=True
+            # ------------          test 3 per task sala 2      -------
+            if ts2[c2t].test==3:
+                #if t3==True and lock[2]!="s2" and idles2==False:
+                #tt2 +=1
+                if t3 == True and lock[2]=="s2":
+                    if ttot >= ts2[c2].end:
+                        lock[2]=''
+                        t3=False
+                        c2+=1
+                        idles2=False
+                elif t3== False:
+                    if ts2[c2].test == 3:
+                        ts2[c2].start=ttot
+                        ts2[c2].end = ttot + 4
+                        #tt2 +=4
+                        t3=True
+                        lock[2]="s2"
+                        idles2=True
+            # ------------          test 4 per task sala 2      -------
+            if ts2[c2t].test==4:
+                #if t4==True and lock[3]!="s2" and idles2==False:
+                #tt2 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t4 == True and lock[3]=="s2":
+                    if ttot >= ts2[c2].end:
+                        lock[3]=''
+                        t4=False
+                        c2+=1
+                        idles2=False
+                elif t4== False:
+                    if ts2[c2].test == 4:
+                        ts2[c2].start=ttot
+                        ts2[c2].end = ttot + 6
+                        #tt2 +=6
+                        t4=True
+                        lock[3]="s2"
+                        idles2=True
+            # ------------          test 5 per task sala 2      -------
+            if ts2[c2t].test==5:
+                #if t5 ==True and lock[4]!="s2" and idles2==False:
+                #tt2 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t5 == True and lock[4]=="s2":
+                    if ttot >= ts2[c2].end:
+                        lock[4]=''
+                        t5=False
+                        c2+=1
+                        idles2=False
+                elif t5== False:
+                    if ts2[c2].test == 5:
+                        ts2[c2].start=ttot
+                        ts2[c2].end = ttot + 8
+                        #tt2 +=8
+                        t5=True
+                        lock[4]="s2"
+                        idles2=True
+        #                               ----------- SALA 3--------
+        if c3<len(ts3):
+            # ------------          test 1 per task sala 3      -------
+            tt3+=1
+            if ts3[c3t].test==1:
+                #if t1==True and lock[0]!="s3" and idles3==False:
+                #tt3+=1
+                if t1 == True and lock[0]=="s3":
+                    if ttot >= ts3[c3].end:
+                        lock[0]=''
+                        t1=False
+                        c3+=1
+                        idles3=False
+                elif t1== False:
+                    if ts3[c3].test == 1:
+                        #reinserisco il controllo perchè mi rifarebbe la stessa visita
+                        ts3[c3].start=ttot
+                        ts3[c3].end = ttot + 1
+                        #tt3 +=1
+                        t1=True
+                        lock[0]="s3"
+                        idles3=True
+            # ------------          test 2 per task sala 3      -------
+            if ts3[c3t].test==2:
+                #if t2==True and lock[1]!="s3" and idles3==False:
+                #tt3 +=1
+                if t2 == True and lock[1]=="s3":
+                    if ttot >= ts3[c3].end:
+                        lock[1]=''
+                        t2=False
+                        c3+=1
+                        idles3=False
+                elif t2== False:
+                    if ts3[c3].test == 2:
+                        ts3[c3].start=ttot
+                        ts3[c3].end = ttot + 2
+                        #tt3 +=2
+                        t2=True
+                        lock[1]="s3"
+                        idles3=True
+            # ------------          test 3 per task sala 3      -------
+            if ts3[c3t].test==3:
+                #if t3==True and lock[2]!="s3" and idles3==False:
+                #tt3 +=1
+                if t3 == True and lock[2]=="s3":
+                    if ttot >= ts3[c3].end:
+                        lock[2]=''
+                        t3=False
+                        c3+=1
+                        idles3=False
+                elif t3== False:
+                    if ts3[c3].test == 3:
+                        ts3[c3].start=ttot
+                        ts3[c3].end = ttot + 4
+                        #tt3 +=4
+                        t3=True
+                        lock[2]="s3"
+                        idles3=True
+            # ------------          test 4 per task sala 3      -------
+            if ts3[c3t].test==4:
+                #if t4==True and lock[3]!="s3" and idles3==False:
+                #tt3 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t4 == True and lock[3]=="s3":
+                    if ttot >= ts3[c3].end:
+                        lock[3]=''
+                        t4=False
+                        c3+=1
+                        idles3=False
+                elif t4== False:
+                    if ts3[c3].test == 4:
+                        ts3[c3].start=ttot
+                        ts3[c3].end = ttot + 6
+                        #tt3 +=6
+                        t4=True
+                        lock[3]="s3"
+                        idles3=True
+            # ------------          test 5 per task sala 3      -------
+            if ts3[c3t].test==5:
+                #if t5 ==True and lock[4]!="s3" and idles3==False:
+                #tt3 +=1
+                #se i tempi vengono sballati di uno bisogna invertire queste due condizioni
+                if t5 == True and lock[4]=="s3":
+                    if ttot >= ts3[c3].end:
+                        lock[4]=''
+                        t5=False
+                        c3+=1
+                        idles3=False
+                elif t5== False:
+                    if ts3[c3].test == 5:
+                        ts3[c3].start=ttot
+                        ts3[c3].end = ttot + 8
+                        #tt3 +=8
+                        t5=True
+                        lock[4]="s3"
+                        idles3=True
+
+        ttot+=1
+        #time.sleep(1)
+        c1t=c1
+        c2t=c2
+        c3t=c3
+        a=len(ts1)
+        b=len(ts2)
+        c=len(ts3)
+        if c1==a and c2==b and c3==c:
+            check_box=True;
+
+    print ("\ntt1\n"+str(tt1))
+    print("\n tt2 \n"+str(tt2))
+    print("\ntt3\n"+str(tt3))
+    return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
