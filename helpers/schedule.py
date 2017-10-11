@@ -937,7 +937,10 @@ def black_box(ts1,ts2,ts3):
         if tmp3== tt3:
             test_before[2] = 0
         ttot+=1
-        #time.sleep(1)
+
+
+
+
         c1t=c1
         c2t=c2
         c3t=c3
