@@ -342,16 +342,15 @@ def check_gantt(lista_task):
         if lista_task[i].sala == 3:
             sala3.append(lista_task[i])
 
-    sala1, sala2, sala3 = black_box(sala1, sala2, sala3)
+    #sala1, sala2, sala3 = black_box(sala1, sala2, sala3)
 
     # vincoli start-end tra pazienti della stessa sala
-    # vincoli_tra_paz_stessa_sala(sala1,0)
-    # vincoli_tra_paz_stessa_sala(sala2,0)
-    # vincoli_tra_paz_stessa_sala(sala3,0)
+    vincoli_tra_paz_stessa_sala(sala1,0)
+    vincoli_tra_paz_stessa_sala(sala2,0)
+    vincoli_tra_paz_stessa_sala(sala3,0)
 
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
-
-    # vincolo_tra_test_uguali(sala1,sala2,sala3)
+    vincolo_tra_test_uguali(sala1,sala2,sala3)
 
     for i in sala1:
         print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
@@ -366,50 +365,39 @@ def check_gantt(lista_task):
 
 
 def vincolo_tra_test_uguali(lista1, lista2, lista3):
-    for t in range(1, 5):  # ciclo per ogni test
-        for i in range(0, len(lista1)):
-            for j in range(0, len(lista2)):
-                for k in range(0, len(lista3)):
-                    if lista1[i].test == t:
-                        if lista2[j].test == t:  # se hanno lo stesso test
-                            if not lista2[j].start >= lista1[i].end:
-                                shift_list(lista2, lista1[i].durata,
-                                           j)  # shift della durata del task nella lista1 tutta la lista2
-                                vincoli_tra_paz_stessa_sala(lista1, i)
-                                vincoli_tra_paz_stessa_sala(lista2, j)
-                                # elif not lista1[i].start >= lista2[i].end:
-                                #    shift_list(lista1,lista2[j].durata,i)
-                        if lista3[k].test == t:
-                            if not lista3[k].start >= lista1[i].end:
-                                shift_list(lista3, lista1[i].durata, k)
-                                vincoli_tra_paz_stessa_sala(lista1, i)
-                                vincoli_tra_paz_stessa_sala(lista3, k)
-                                # elif not lista1[i].start >= lista3[k].end:
-                                #    shift_list(lista1, lista3[k].durata,i)
-                    if lista2[j].test == t:
-                        if lista1[i].test == t:
-                            if not lista2[j].start >= lista1[i].end:
-                                shift_list(lista2, lista1[i].durata,
-                                           j)  # shift della durata del task nella lista1 tutta la lista2
-                                vincoli_tra_paz_stessa_sala(lista1, i)
-                                vincoli_tra_paz_stessa_sala(lista2, j)
-                                # elif not lista1[i].start >= lista2[i].end:
-                                #    shift_list(lista1,lista2[j].durata,i)
-                        if lista3[k].test == t:
-                            if not lista3[k].start >= lista2[j].end:
-                                shift_list(lista3, lista2[j].durata, k)
-                                vincoli_tra_paz_stessa_sala(lista2, j)
-                                vincoli_tra_paz_stessa_sala(lista3, k)
-                                # elif not lista2[j].start >= lista3[k].end:
-                                #    shift_list(lista1, lista3[k].durata,j)
 
+    occupato1 = True
+    occupato2 = True
+    occupato3 = True
+    occupato4 = True
+    occupato5 = True
+    bool = [occupato1, occupato2, occupato3, occupato4, occupato5]
 
-def vincoli_tra_paz_diversa_sala(lista1, lista2, lista3):
-    for i in range(0, len(lista1)):
-        for j in range(0, len(lista2)):
-            if lista1[i].test == lista2[j].test:
-                shift_list(lista2, lista1[i].durata)
-                # if lista1[i].test == lista3[j].test:
+    for t in range(0, 1000):  # ciclo ogni istante del grafo
+        for i in range(0,100):
+            if i<len(lista1): #se non sono oltre la fine della lista
+                if lista1[i].start == t and bool[lista1[i].test-1]: # se lo start è a t e operatore libero
+                    bool[lista1[i].test-1] = False # metto a false il test n-esimo
+                elif lista1[i].end == t and not bool[lista1[i].test-1]: # se sono al termine del task
+                    bool[lista1[i].test - 1] = True
+                elif lista1[i].start == t and not bool[lista1[i].test-1]: # se mi serve l'operatore ma è già occupato
+                    shift_list(lista1,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
+
+            if i < len(lista2): #se non sono oltre la fine della lista
+                if lista2[i].start == t and bool[lista2[i].test-1]: # se lo start è a t e operatore libero
+                    bool[lista2[i].test-1] = False # metto a false il test n-esimo
+                elif lista2[i].end == t and not bool[lista2[i].test-1]: # se sono al termine del task
+                    bool[lista2[i].test - 1] = True
+                elif lista2[i].start == t and not bool[lista2[i].test-1]: # se mi serve l'operatore ma è già occupato
+                    shift_list(lista2,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
+
+            if i < len(lista3): #se non sono oltre la fine della lista
+                if lista3[i].start == t and bool[lista3[i].test-1]: # se lo start è a t e operatore libero
+                    bool[lista3[i].test-1] = False # metto a false il test n-esimo
+                elif lista3[i].end == t and not bool[lista3[i].test-1]: # se sono al termine del task
+                    bool[lista3[i].test - 1] = True
+                elif lista3[i].start == t and not bool[lista3[i].test-1]: # se mi serve l'operatore ma è già occupato
+                    shift_list(lista3,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
 
 
 def shift_list(list, shift, index):
@@ -421,12 +409,13 @@ def shift_list(list, shift, index):
 
 def vincoli_tra_paz_stessa_sala(sala, index):
     for i in range(index, len(sala)):  # parto da i-esimo elemento perchè non devo sempre settare tutta la lista
-        if i < (len(sala) - 1):  # se non sono arrivato all'ultimo task
-            if not sala[i + 1].start >= sala[i].end:
-                while sala[i + 1].start >= sala[i].end:
-                    sala[i + 1].start = sala[i + 1].start + 1
+        if not i == len(sala)-1:  # se non sono arrivato all'ultimo task
+            if sala[i + 1].start < sala[i].end:
+                    sala[i + 1].start = sala[i].end
+                    sala[i+1].end = sala[i+1].start+sala[i+1].durata
             elif sala[i + 1].start >= sala[i].end:
                 sala[i + 1].start = sala[i].end
+                sala[i + 1].end = sala[i + 1].start + sala[i + 1].durata
 
 
 def insert_task(listp):
