@@ -16,9 +16,9 @@ class Paziente:
         durate = [1, 2, 4, 6, 8]
         tot = 0
         test = paziente.test_array
-        for t in range(0, len(test)):
-            n = test[t]
-            tot = tot + n * durate[t]
+        for t in test:
+            n = t-1
+            tot = tot + durate[n]
 
         return tot
 

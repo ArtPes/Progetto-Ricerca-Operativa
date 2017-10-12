@@ -42,13 +42,13 @@ def pack(listp, maxValue):
                 bin.append(item)
 
                 break
-
         else:
             # item didn't fit into any bin, start a new bin
             # print 'Making new bin for', item
             bin = Bin()
             bin.append(item)
             bins.append(bin)
+
 
     return bins
 
@@ -69,6 +69,11 @@ def packAndShow(listp):
     max_durata = math.ceil(durata_sal)
 
     bins = pack(listp, max_durata)
+    d = max_durata
+    if len(bins)>3:
+        while len(bins)>3:
+            bins = pack(listp, d)
+            d = d+1
 
     # print('Solution using', len(bins), 'bins:')
 
@@ -84,7 +89,4 @@ def packAndShow(listp):
 
         k += 1
 
-
-if __name__ == '__main__':
-    import random
 
