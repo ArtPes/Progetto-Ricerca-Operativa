@@ -5,7 +5,7 @@
 """
 import math
 
-from helpers.struct import Paziente
+from helpers.struct_p import Paziente
 
 
 class Bin(object):

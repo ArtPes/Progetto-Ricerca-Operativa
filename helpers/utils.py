@@ -1,6 +1,6 @@
 import os
 
-from helpers.struct import *
+from helpers.struct_p import *
 
 def output(lock, message):
     lock.acquire()

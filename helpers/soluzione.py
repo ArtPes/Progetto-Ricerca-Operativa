@@ -1,8 +1,10 @@
+from helpers.grafo_gantt import insert_task_da_nodo, check_gantt, grafico_gantt
 from helpers.utils import *
-from helpers.struct import *
+from helpers.struct_p import *
 
 
 def check_aciclico(grafo, durate, lista_nodi, max_makespan):
+    '''
     costo = []
     nodi_visita = UnorderedList()
     nodi_visita.add(0)
@@ -23,7 +25,7 @@ def check_aciclico(grafo, durate, lista_nodi, max_makespan):
                         costo[i] = durate[test] + costo[nodo]
                     if costo[i] >= max_makespan:
                         return False
-        nodi_visita.remove(nodo)
+        nodi_visita.remove(nodo)'''
     return True
 
 
@@ -77,7 +79,6 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
         print("\nNon è ciclico, si può procedere")
     else:
         print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
-
     return grafo_new
 
 
@@ -89,7 +90,7 @@ def critical_path(grafo, nodi):
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
-
+    '''
     while not nodi_visita.isEmpty():
         item = nodi_visita.getFirst()
         nodo = item.data
@@ -103,7 +104,7 @@ def critical_path(grafo, nodi):
                     if costo[nodo] + durate[test] >= costo[i]:
                         costo[i] = durate[test] + costo[nodo]
         nodi_visita.remove(nodo)
-    '''
+    
     nodi_visita = []
     nodi_visita.append(0)
     while nodi_visita:
@@ -118,19 +119,22 @@ def critical_path(grafo, nodi):
                     if costo[nodo] + durate[test] >= costo[i]:
                         costo[i] = durate[test] + costo[nodo]
         nodi_visita.remove(nodo)
-        
-        '''
-    # print(costo)
     max = massimo(costo)
-    return max
+    '''
+    lista_task = insert_task_da_nodo(nodi)
+    # elimino i nodi 0 e quello End
+    # lista_task = elimina_nodi(lista_task)
+    ts1, ts2, ts3 = check_gantt(lista_task)
+    # crea il grafo con plotly
+    grafico_gantt(ts1, ts2, ts3)
+    # cerco il task con la fine più grande
+    lista_tot = ts1 + ts2 + ts3
+    makespan = 0
+    for i in lista_tot:
+        if i.end > makespan:
+            makespan = i.end
 
-
-def massimo(lista):
-    a = 0
-    for i in range(0, len(lista)):
-        if lista[i] > a:
-            a = lista[i]
-    return a
+    return makespan
 
 
 def trova_archi(nodi, len_nodi, grafo_disgiuntivo):

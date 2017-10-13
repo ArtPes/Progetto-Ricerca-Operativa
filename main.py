@@ -1,5 +1,5 @@
 import threading
-from helpers.struct import *
+from helpers.struct_p import *
 from helpers.schedule import *
 from helpers.utils import *
 from helpers.first_fit_decreasing import *
