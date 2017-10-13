@@ -44,11 +44,13 @@ class Nodo:
     idN = 0
     idP = 0
     visita = 0
+    sala = 0
 
-    def __init__(self, idNo, idPaz, test):
+    def __init__(self, idNo, idPaz, test ,sal):
         self.idN = idNo
         self.idP = idPaz
         self.visita = test - 1
+        self.sala= sal
 
 
 # -------------------------------------------------------------------------------------

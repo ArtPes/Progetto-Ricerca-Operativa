@@ -28,23 +28,30 @@ def set_the_mat(lists, listp):
     return (matrixp, matrixs)
 
 
-def crea_nodo(mp):
+def crea_nodo(mp,ms):
     # creo nodo da lista pazienti (paz,visita)
     nodi = []
     numn = 0
-    ns = Nodo(0, 0, 0)
+    ns = Nodo(0, 0, 0, 0)
     nodi.append(ns)
     for i in range(0, len(mp)):
         for j in range(0, len(mp[i])):
             numn += 1
-            nd = Nodo(numn, i + 1, mp[i][
-                j])  # TODO: mettere a posto matrice mp in modo che passi anche la sala cosi da fare riferimento nodo==>task
+            nd = Nodo(numn, i + 1, mp[i][j]+1,0)
+
             nodi.append(nd)
-    nd = Nodo(numn + 1, 0, 0)
+
+    for i in range(0,len(nodi)):
+        for  k in range(0,len(ms)):
+            for j in range(0,len(ms[k])):
+                if ms[k][j]== nodi[i].idP :
+                    nodi[i].sala=k+1
+    nd = Nodo(numn + 1 , 0 , 0 , 0 )
     nodi.append(nd)
+
     # stampa nodi per creare grafo a mano easy
-    # for nd in nodi:
-    #    print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita+1) + ")")
+    #for nd in nodi:
+        #print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita) +","+ str(nd.sala)+")")
 
     return nodi, numn
 
@@ -275,13 +282,13 @@ def process(lists, listp, durataTest):
     # stampa_matrici(mp,"paziente","visita")
     # stampa_matrici(ms, "saletta", "paziente")
 
-    nodi, numn = crea_nodo(mp)
+    nodi, numn = crea_nodo(mp,ms)
     mstart = create_mat(nodi)
 
     # crea la soluzione e poi crea matrice bool
     # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
-    # stampa3(matp)
+    #stampa3(ms)
     # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     # mstartbool = create_mat_bool(nodi)
     # print("\nStampa Matrice Booleana: ")
@@ -317,9 +324,9 @@ def process(lists, listp, durataTest):
 
     # bazza del check dei task relativi ai pazienti
     # i test non si sovrappongono
-    lista_task = insert_task(listp)
-    # TODO: una volta messa a posto la matrice mp così da creare i nodi con anche il valore sala creo la lista task a partire dai nodi e non dalla lista di persone
-    # lista_task = insert_task_da_nodo(nodi)
+    #lista_task = insert_task(listp)
+    # TODO: consegnare sto progetto che sono agro
+    lista_task = insert_task_da_nodo(nodi)
     # elimino i nodi 0 e quello End
     # lista_task = elimina_nodi(lista_task)
 
@@ -950,11 +957,12 @@ def black_box(ts1, ts2, ts3):
 # ---------------------------------------------------------------------
 
 # variante in cui passo i valori dei nodi cosi ho grafo e task collegati
-def insert_task_da_nodo(listp):
+def insert_task_da_nodo(nodo):
     list_task = []
     # creo il task relativo a ogni paziente
-    for i in range(0, len(listp)):
-        task = crea_task_da_nodo(listp[i])
+    for i in range(1, len(nodo)-1):
+        task = crea_task_da_nodo(nodo[i])
+
         print("Paz: " + str(task.paziente) + " Sala: " + str(task.sala) + " Test: " + str(task.test) + " Start: " + str(
             task.start))
         list_task.append(task)
@@ -962,7 +970,7 @@ def insert_task_da_nodo(listp):
 
 
 def crea_task_da_nodo(nodo):
-    task = Task(nodo.idP, nodo.sala, nodo.visita, 0)
+    task = Task(nodo.idP, nodo.sala, int(nodo.visita),0)
     return task
 
 
