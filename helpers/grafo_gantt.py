@@ -5,6 +5,8 @@ plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgm
 import plotly.plotly as py
 import plotly.figure_factory as ff
 
+import main
+
 
 def grafico_gantt(lista1, lista2, lista3):
     df = []
@@ -35,7 +37,6 @@ def grafico_gantt(lista1, lista2, lista3):
 
     fig = ff.create_gantt(df, colors=colors, index_col='Resource', show_colorbar=True, group_tasks=True)
     py.plot(fig, filename='gantt-dictioanry-colors', world_readable=True)
-
 
 def trovaS_E(t):
     i = 0
@@ -68,11 +69,6 @@ def trovaS_E(t):
 
     return start, end
 
-
-
-
-
-
 def check_gantt(lista_task):
     time = 0
 
@@ -99,15 +95,17 @@ def check_gantt(lista_task):
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
     vincolo_tra_test_uguali(sala1,sala2,sala3)
 
+    '''
     for i in sala1:
-        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-            i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
     for i in sala2:
-        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-            i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
     for i in sala3:
-        print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-            i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
+    '''
     return sala1, sala2, sala3
 
 def vincolo_tra_test_uguali(lista1, lista2, lista3):

@@ -84,29 +84,13 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
 
 def critical_path(grafo, nodi):
     costo = []
-    nodi_visita = UnorderedList()
-    nodi_visita.add(0)
+    nodi_visita = []
+    nodi_visita.append(0)
     durate = [1, 2, 4, 6, 8, 0]
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
     '''
-    while not nodi_visita.isEmpty():
-        item = nodi_visita.getFirst()
-        nodo = item.data
-        for i in range(0, len(nodi)):
-            if grafo[nodo][i] == 1:
-                if not nodi_visita.search(i):
-                    nodi_visita.add(i)
-                    test = nodi[i].visita
-                    if test == -1:  # se prossimo nodo è quello di fine
-                        test = 5
-                    if costo[nodo] + durate[test] >= costo[i]:
-                        costo[i] = durate[test] + costo[nodo]
-        nodi_visita.remove(nodo)
-    
-    nodi_visita = []
-    nodi_visita.append(0)
     while nodi_visita:
         nodo = nodi_visita[0]
         for i in range(0, len(nodi)):
@@ -122,11 +106,10 @@ def critical_path(grafo, nodi):
     max = massimo(costo)
     '''
     lista_task = insert_task_da_nodo(nodi)
-    # elimino i nodi 0 e quello End
-    # lista_task = elimina_nodi(lista_task)
+
     ts1, ts2, ts3 = check_gantt(lista_task)
     # crea il grafo con plotly
-    grafico_gantt(ts1, ts2, ts3)
+    # grafico_gantt(ts1, ts2, ts3)
     # cerco il task con la fine più grande
     lista_tot = ts1 + ts2 + ts3
     makespan = 0
@@ -229,7 +212,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
         # se è aciclico calcolo il makespan
         if (aciclico):
             makespan_temp = critical_path(grafo2, nodi)
-            #print("S_Makespan : " + str(makespan_temp))
+            print("S_Makespan : " + str(makespan_temp))
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
             if mossa_temp in tabu_list:
