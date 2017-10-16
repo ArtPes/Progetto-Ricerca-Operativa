@@ -1,6 +1,4 @@
-from helpers.grafo_gantt import grafico_gantt, grafo_makespan
 from helpers.soluzione import *
-import time
 
 
 def list_to_mat(list):
@@ -274,9 +272,6 @@ def bubble_sort(l):
     return l
 
 
-# 0 nessun legame
-# 1va in
-# -1 riceve
 def process(lists, listp, durataTest):
     mp, ms = set_the_mat(lists, listp)
 
@@ -309,7 +304,7 @@ def process(lists, listp, durataTest):
     con C(i) costo del percorso fino al nodo i e D(i) durata dell'operazione del nodo i
     '''
 
-    makespan = critical_path(soluzione, nodi)
+    makespan = critical_path(soluzione, nodi, durataTest)
     print("\nMakespan è: " + str(makespan))
 
     print("\n TABU SEARCH\n")

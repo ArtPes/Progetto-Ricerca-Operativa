@@ -1,5 +1,6 @@
 # strutture Paziente Saletta Opertore Test
 
+
 class Paziente:
     id = 0
     durata_tot = 0
@@ -103,9 +104,7 @@ class Task:
         self.sala = sala
         self.test = test
         self.start = start
-        #ho messo a 110 perchè mi serve un valore che non sia possibile superare da ttot nel ciclo
-        self.end=start+self.calcola_durata(test)
-        #self.end = start + self.calcola_durata(test)
+        self.end= start + self.calcola_durata(test)
         self.durata = self.calcola_durata(test)
 
     def calcola_durata(self,test):

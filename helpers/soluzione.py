@@ -1,34 +1,27 @@
-from helpers.grafo_gantt import insert_task_da_nodo, check_gantt, grafico_gantt
-from helpers.utils import *
 from helpers.struct_p import *
 
 
 def check_aciclico(grafo, durate, lista_nodi, max_makespan):
-    '''
     costo = []
-    nodi_visita = UnorderedList()
-    nodi_visita.add(0)
+    nodi_visita = []
+    nodi_visita.append(0)
 
-    # array di 0 per confrontare i costi
     for i in range(0, len(lista_nodi)):
         costo.append(0)
 
-    while not nodi_visita.isEmpty():
-        item = nodi_visita.getFirst()
-        nodo = item.data
+    while not nodi_visita:
+        nodo = nodi_visita[0]
         for i in range(0, len(lista_nodi)):
             if grafo[nodo][i] == 1:
-                if not nodi_visita.search(i):
-                    nodi_visita.add(i)
+                if i not in nodi_visita:
+                    nodi_visita.append(i)
                     test = lista_nodi[nodo].visita
                     if costo[nodo] + durate[test] >= costo[i]:
                         costo[i] = durate[test] + costo[nodo]
                     if costo[i] >= max_makespan:
                         return False
-        nodi_visita.remove(nodo)'''
+        nodi_visita.remove(nodo)
     return True
-
-
 
 def copia_grafo_booleano(grafo, len_nodi):
     # creo un nuovo grafo
@@ -83,11 +76,11 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
     return grafo_new
 
 
-def critical_path(grafo, nodi):
+def critical_path(grafo, nodi, durate):
     costo = []
     nodi_visita = []
     nodi_visita.append(0)
-    durate = [1, 2, 4, 6, 8, 0]
+    durate.append(0)
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
@@ -110,7 +103,7 @@ def critical_path(grafo, nodi):
             makespan = i
 
     '''
-    
+    decommentare quando tabu è sui test per paziente e non su test operatore
     lista_task = insert_task_da_nodo(nodi)
 
     ts1, ts2, ts3 = check_gantt(lista_task)
@@ -219,7 +212,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
-            makespan_temp = critical_path(grafo2, nodi)
+            makespan_temp = critical_path(grafo2, nodi,durate)
             print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
             # controllo la tabu list
@@ -310,8 +303,8 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
                 mossa_temp = Mossa('r', temp1.visita, temp1.primo_estremo, temp1.secondo_estemo, temp2.primo_estremo,
                                    temp2.secondo_estemo)
                 aciclico = check_aciclico(grafo_temporaneo, durate, nodi, max_makespan)
-                if (aciclico):
-                    makespan_temporaneo = critical_path(grafo_temporaneo, nodi)
+                if aciclico:
+                    makespan_temporaneo = critical_path(grafo_temporaneo, nodi, durate)
                     print("Makespan remove: " + str(makespan_temporaneo))
                     lista_makespan.append(makespan_temporaneo)
                     if makespan_temporaneo < makespan_precedente:
@@ -412,7 +405,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
 
             elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
                     #print("Ho scelto la mossa: ")
-                    #print("[" + s.Mossa.tipo + " " + s.Mossa.m + " " + s.Mossa.pipa + " " + s.Mossa.sipa + " " + s.Mossa.pisa + " " + s.Mossa.sisa + "]")
+                    #print("[" + str(s.m.tipo) + " " + str(s.m) + " " + str(s.pipa) + " " + str(s.sipa) + " " + str(s.pisa) + " " + str(s.sisa) + "]")
                     makespan = makespan_temp_s
                     grafo_partenza = copia_grafo(s.grafo, len(nodi))
 

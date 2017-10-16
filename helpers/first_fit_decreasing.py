@@ -35,16 +35,13 @@ def pack(listp, maxValue):
 
     for item in values:
         # Try to fit item into a bin
-
         for bin in bins:
             if bin.sum + item <= maxValue:
                 # print 'Adding', item, 'to', bin
                 bin.append(item)
-
                 break
         else:
             # item didn't fit into any bin, start a new bin
-            # print 'Making new bin for', item
             bin = Bin()
             bin.append(item)
             bins.append(bin)
@@ -74,8 +71,6 @@ def packAndShow(listp):
         while len(bins)>3:
             bins = pack(listp, d)
             d = d+1
-
-    # print('Solution using', len(bins), 'bins:')
 
     k = 1
 

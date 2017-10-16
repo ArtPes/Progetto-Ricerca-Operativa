@@ -9,6 +9,7 @@ from helpers.first_fit_decreasing import *
 if __name__ == "__main__":
 
     out_lck = threading.Lock()
+    # da settare qui le durate e nel file struct_p.py
     durataTest = [1, 2, 4, 6, 8]
 
     while True:

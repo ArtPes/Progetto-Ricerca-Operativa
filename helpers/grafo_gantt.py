@@ -4,14 +4,11 @@ import plotly.plotly as py
 import plotly.figure_factory as ff
 import plotly.graph_objs as go
 import numpy as np
-
-
 plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
 
 def grafo_makespan(lista):
-
     N = len(lista)
-    random_x = np.linspace(0, N+1500, N)
+    random_x = np.linspace(0, N + 1500, N)
     random_y = lista
     '''
     trace0 = go.Scatter(
@@ -44,7 +41,6 @@ def grafo_makespan(lista):
 
     # Plot and embed in ipython notebook!
     py.plot(data, filename='basic-scatter')
-
 
 def grafico_gantt(lista1, lista2, lista3):
     df = []
@@ -123,15 +119,15 @@ def check_gantt(lista_task):
         if lista_task[i].sala == 3:
             sala3.append(lista_task[i])
 
-    #sala1, sala2, sala3 = black_box(sala1, sala2, sala3)
+    # sala1, sala2, sala3 = black_box(sala1, sala2, sala3)
 
     # vincoli start-end tra pazienti della stessa sala
-    vincoli_tra_paz_stessa_sala(sala1,0)
-    vincoli_tra_paz_stessa_sala(sala2,0)
-    vincoli_tra_paz_stessa_sala(sala3,0)
+    vincoli_tra_paz_stessa_sala(sala1, 0)
+    vincoli_tra_paz_stessa_sala(sala2, 0)
+    vincoli_tra_paz_stessa_sala(sala3, 0)
 
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
-    vincolo_tra_test_uguali(sala1,sala2,sala3)
+    vincolo_tra_test_uguali(sala1, sala2, sala3)
 
     '''
     for i in sala1:
@@ -147,7 +143,6 @@ def check_gantt(lista_task):
     return sala1, sala2, sala3
 
 def vincolo_tra_test_uguali(lista1, lista2, lista3):
-
     occupato1 = True
     occupato2 = True
     occupato3 = True
@@ -156,31 +151,34 @@ def vincolo_tra_test_uguali(lista1, lista2, lista3):
     bool = [occupato1, occupato2, occupato3, occupato4, occupato5]
 
     for t in range(0, 1000):  # ciclo ogni istante del grafo
-        for i in range(0,100):
-            if i<len(lista1): #se non sono oltre la fine della lista
-                if lista1[i].start == t and bool[lista1[i].test-1]: # se lo start è a t e operatore libero
-                    bool[lista1[i].test-1] = False # metto a false il test n-esimo
-                elif lista1[i].end == t and not bool[lista1[i].test-1]: # se sono al termine del task
+        for i in range(0, 100):
+            if i < len(lista1):  # se non sono oltre la fine della lista
+                if lista1[i].start == t and bool[lista1[i].test - 1]:  # se lo start è a t e operatore libero
+                    bool[lista1[i].test - 1] = False  # metto a false il test n-esimo
+                elif lista1[i].end == t and not bool[lista1[i].test - 1]:  # se sono al termine del task
                     bool[lista1[i].test - 1] = True
-                elif lista1[i].start == t and not bool[lista1[i].test-1]: # se mi serve l'operatore ma è già occupato
-                    shift_list(lista1,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
+                elif lista1[i].start == t and not bool[lista1[i].test - 1]:  # se mi serve l'operatore ma è già occupato
+                    shift_list(lista1, 1,
+                               i)  # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
 
-            if i < len(lista2): #se non sono oltre la fine della lista
-                if lista2[i].start == t and bool[lista2[i].test-1]: # se lo start è a t e operatore libero
-                    bool[lista2[i].test-1] = False # metto a false il test n-esimo
-                elif lista2[i].end == t and not bool[lista2[i].test-1]: # se sono al termine del task
+            if i < len(lista2):  # se non sono oltre la fine della lista
+                if lista2[i].start == t and bool[lista2[i].test - 1]:  # se lo start è a t e operatore libero
+                    bool[lista2[i].test - 1] = False  # metto a false il test n-esimo
+                elif lista2[i].end == t and not bool[lista2[i].test - 1]:  # se sono al termine del task
                     bool[lista2[i].test - 1] = True
-                elif lista2[i].start == t and not bool[lista2[i].test-1]: # se mi serve l'operatore ma è già occupato
-                    shift_list(lista2,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
+                elif lista2[i].start == t and not bool[lista2[i].test - 1]:  # se mi serve l'operatore ma è già occupato
+                    shift_list(lista2, 1,
+                               i)  # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
 
-            if i < len(lista3): #se non sono oltre la fine della lista
-                if lista3[i].start == t and bool[lista3[i].test-1]: # se lo start è a t e operatore libero
-                    bool[lista3[i].test-1] = False # metto a false il test n-esimo
-                elif lista3[i].end == t and not bool[lista3[i].test-1]: # se sono al termine del task
+            if i < len(lista3):  # se non sono oltre la fine della lista
+                if lista3[i].start == t and bool[lista3[i].test - 1]:  # se lo start è a t e operatore libero
+                    bool[lista3[i].test - 1] = False  # metto a false il test n-esimo
+                elif lista3[i].end == t and not bool[lista3[i].test - 1]:  # se sono al termine del task
                     bool[lista3[i].test - 1] = True
-                elif lista3[i].start == t and not bool[lista3[i].test-1]: # se mi serve l'operatore ma è già occupato
-                    shift_list(lista3,1,i) # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
-    return lista1,lista2,lista3
+                elif lista3[i].start == t and not bool[lista3[i].test - 1]:  # se mi serve l'operatore ma è già occupato
+                    shift_list(lista3, 1,
+                               i)  # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
+    return lista1, lista2, lista3
 
 def shift_list(list, shift, index):
     # shift dall'indice i-esimo in poi, nno tutti i task della lista
@@ -190,10 +188,10 @@ def shift_list(list, shift, index):
 
 def vincoli_tra_paz_stessa_sala(sala, index):
     for i in range(index, len(sala)):  # parto da i-esimo elemento perchè non devo sempre settare tutta la lista
-        if not i == len(sala)-1:  # se non sono arrivato all'ultimo task
+        if not i == len(sala) - 1:  # se non sono arrivato all'ultimo task
             if sala[i + 1].start < sala[i].end:
-                    sala[i + 1].start = sala[i].end
-                    sala[i+1].end = sala[i+1].start+sala[i+1].durata
+                sala[i + 1].start = sala[i].end
+                sala[i + 1].end = sala[i + 1].start + sala[i + 1].durata
             elif sala[i + 1].start >= sala[i].end:
                 sala[i + 1].start = sala[i].end
                 sala[i + 1].end = sala[i + 1].start + sala[i + 1].durata
@@ -201,20 +199,20 @@ def vincoli_tra_paz_stessa_sala(sala, index):
 def insert_task_da_nodo(nodo):
     list_task = []
     # creo il task relativo a ogni paziente
-    for i in range(1, len(nodo)-1):
+    for i in range(1, len(nodo) - 1):
         task = crea_task_da_nodo(nodo[i])
-        #print("Paz: " + str(task.paziente) + " Sala: " + str(task.sala) + " Test: " + str(task.test) + " Start: " + str(
-            #task.start))
+        # print("Paz: " + str(task.paziente) + " Sala: " + str(task.sala) + " Test: " + str(task.test) + " Start: " + str(
+        # task.start))
         list_task.append(task)
     return list_task
 
 def crea_task_da_nodo(nodo):
-    task = Task(nodo.idP, nodo.sala, int(nodo.visita),0)
+    task = Task(nodo.idP, nodo.sala, int(nodo.visita), 0)
     return task
 
 def elimina_nodi(tasks):
     for t in tasks:
-        if t.sala == 0: #nei nodi start-end la sala è impostata a 0
+        if t.sala == 0:  # nei nodi start-end la sala è impostata a 0
             tasks.remove(t)
 
 # ---------------------------------------------------------------------
