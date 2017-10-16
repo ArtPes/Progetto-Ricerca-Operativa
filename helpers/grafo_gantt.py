@@ -1,11 +1,49 @@
 import plotly
 from helpers.struct_p import *
-
-plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
 import plotly.plotly as py
 import plotly.figure_factory as ff
+import plotly.graph_objs as go
+import numpy as np
 
-import main
+
+plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
+
+def grafo_makespan(lista):
+
+    N = len(lista)
+    random_x = np.linspace(0, N+1500, N)
+    random_y = lista
+    '''
+    trace0 = go.Scatter(
+        x=random_x,
+        y=random_y,
+        mode='lines+markers',
+        name='Makespan',
+        line=dict(
+            color=('rgb(109,246,137)'),
+            width=4),
+        marker=dict(color='rgb(22, 96, 167)', size=20)
+    )
+
+    data = [trace0]
+
+    py.plot(data, filename='line-mode')
+    '''
+
+    random_x = np.random.randn(N)
+    random_y = lista
+
+    # Create a trace
+    trace = go.Scatter(
+        x=random_x,
+        y=random_y,
+        mode='markers'
+    )
+
+    data = [trace]
+
+    # Plot and embed in ipython notebook!
+    py.plot(data, filename='basic-scatter')
 
 
 def grafico_gantt(lista1, lista2, lista3):

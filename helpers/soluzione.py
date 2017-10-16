@@ -90,7 +90,7 @@ def critical_path(grafo, nodi):
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
-    '''
+
     while nodi_visita:
         nodo = nodi_visita[0]
         for i in range(0, len(nodi)):
@@ -103,8 +103,13 @@ def critical_path(grafo, nodi):
                     if costo[nodo] + durate[test] >= costo[i]:
                         costo[i] = durate[test] + costo[nodo]
         nodi_visita.remove(nodo)
-    max = massimo(costo)
+    makespan = 0
+    for i in costo:
+        if i>makespan:
+            makespan = i
+
     '''
+    
     lista_task = insert_task_da_nodo(nodi)
 
     ts1, ts2, ts3 = check_gantt(lista_task)
@@ -116,6 +121,7 @@ def critical_path(grafo, nodi):
     for i in lista_tot:
         if i.end > makespan:
             makespan = i.end
+            '''
 
     return makespan
 
@@ -168,6 +174,7 @@ def conta_uscenti(grafo, num_of_nodi, indice_secondo):
 
 
 def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan):
+    lista_makespan = []
     size = len(archi_esistenti)
     aciclico = False
     temp = Arco(0, 0, 0)
@@ -213,6 +220,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
         if (aciclico):
             makespan_temp = critical_path(grafo2, nodi)
             print("S_Makespan : " + str(makespan_temp))
+            lista_makespan.append(makespan_temp)
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
             if mossa_temp in tabu_list:
@@ -235,7 +243,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
     if no_mossa:
         makespan = max_makespan
 
-    s = Solution(grafo_temporaneo, makespan, tabu_temp)
+    s = Solution(grafo_temporaneo, makespan, tabu_temp,lista_makespan)
 
     return s
 
@@ -243,6 +251,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan, fixed):
     archi_esistenti = []
     archi_da_imporre = []
+    lista_makespan = []
 
     archi_esistenti = trova_archi_esistenti(nodi, num_of_nodi, fixed, archi_da_decidere, grafo_iniz)
     archi_da_imporre = cerca_archi_non_esistenti(archi_da_decidere, grafo_iniz, num_of_nodi, fixed, nodi)
@@ -303,6 +312,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
                 if (aciclico):
                     makespan_temporaneo = critical_path(grafo_temporaneo, nodi)
                     print("Makespan remove: " + str(makespan_temporaneo))
+                    lista_makespan.append(makespan_temporaneo)
                     if makespan_temporaneo < makespan_precedente:
                         if not tabu_list.contains(mossa_temp):
                             nessuna_mossa = False
@@ -321,13 +331,13 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
     if nessuna_mossa:
         makespan_precedente = max_makespan
 
-    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente)
+    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente,lista_makespan)
 
     return sol
 
 
 def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate):
-
+    lista_makespan = []
     makespan_temp_s = 0
     makespan_temp_r = 0
     makespan_candidato_temp = makespan_candidato
@@ -367,10 +377,12 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
 
             s = swap(archi_esistenti, grafo_partenza,len(nodi), tabu_list, nodi, durate, makespan_candidato_temp)
             makespan_temp_s = s.makespan
-
+            #add lista dei makespan trovati con lo swap
+            lista_makespan = lista_makespan + s.lista_makespan
             r = remove(archi_da_decidere, grafo_partenza, len(nodi), tabu_list, nodi, durate, makespan_candidato_temp, grafo_disgiuntivo)
             makespan_temp_r = r.makespan
-
+            #add lista dei makespan trovati con la remove
+            #lista_makespan = lista_makespan + r.lista_makespan
             if makespan_temp_r == makespan_temp_s and makespan_temp_r == max_makespan:
                 print("nessuna mossa disponibile")
                 iterazioni = 0
@@ -420,7 +432,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
             if makespan < makespan_candidato_temp:
                 makespan_candidato_temp = makespan
                 ottimo_candidato_grafo_temp = copia_grafo(grafo_partenza, len(nodi))
-
-        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0))
+                lista_makespan.append(makespan_candidato_temp)
+        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan)
 
         return s

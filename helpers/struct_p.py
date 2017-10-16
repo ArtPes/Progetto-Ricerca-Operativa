@@ -88,10 +88,11 @@ class Mossa:
 # -----------------------------------------------------------------------------------------
 
 class Solution:
-    def __init__(self, grafo, makespan, Mossa):
+    def __init__(self, grafo, makespan, Mossa, lista_makespan):
         self.grafo = grafo
         self.makespan = makespan
         self.Mossa = Mossa
+        self.lista_makespan = lista_makespan
 
 
 # ------------------------------------------------------------------------------------------

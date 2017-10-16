@@ -1,4 +1,4 @@
-from helpers.grafo_gantt import grafico_gantt
+from helpers.grafo_gantt import grafico_gantt, grafo_makespan
 from helpers.soluzione import *
 import time
 
@@ -318,3 +318,5 @@ def process(lists, listp, durataTest):
     print("\nGrafo finale: ")
     stampa3(sol.grafo)
     print("\nMAKESPAN FINALE: "+ str(sol.makespan))
+
+    #grafo_makespan(sol.lista_makespan)
