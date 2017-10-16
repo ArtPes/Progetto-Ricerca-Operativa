@@ -29,6 +29,7 @@ def check_aciclico(grafo, durate, lista_nodi, max_makespan):
     return True
 
 
+
 def copia_grafo_booleano(grafo, len_nodi):
     # creo un nuovo grafo
     h, w = len_nodi, len_nodi
