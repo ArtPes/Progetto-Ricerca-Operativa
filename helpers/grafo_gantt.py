@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 import numpy as np
 plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
 
-def grafo_makespan(lista):
+def grafo_makespan(lista,makespan_end,makespan_start):
     N = len(lista)
     random_x = np.linspace(0, N + 1500, N)
     random_y = lista
@@ -31,13 +31,29 @@ def grafo_makespan(lista):
     random_y = lista
 
     # Create a trace
-    trace = go.Scatter(
+    trace0 = go.Scatter(
         x=random_x,
         y=random_y,
-        mode='markers'
+        mode='markers',
+        name = 'Makespan Swap & Remove',
+        marker = dict(size = 10)
+    )
+    trace1 = go.Scatter(
+        x = 0,
+        y = makespan_end,
+        mode = 'markers',
+        marker = dict (color='rgb(154,233,22)', size=25),
+        name = 'Makespan_End'
+    )
+    trace2 = go.Scatter(
+        x = 0,
+        y = makespan_start,
+        mode = 'markers',
+        marker = dict (color='rgb(191,10,10)', size=25),
+        name = 'Makespan_Start'
     )
 
-    data = [trace]
+    data = [trace0,trace1,trace2]
 
     # Plot and embed in ipython notebook!
     py.plot(data, filename='basic-scatter')
@@ -129,7 +145,7 @@ def check_gantt(lista_task):
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
     vincolo_tra_test_uguali(sala1, sala2, sala3)
 
-    '''
+
     for i in sala1:
             print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
                 i.start) + " End: " + str(i.end))
@@ -139,7 +155,7 @@ def check_gantt(lista_task):
     for i in sala3:
             print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
                 i.start) + " End: " + str(i.end))
-    '''
+
     return sala1, sala2, sala3
 
 def vincolo_tra_test_uguali(lista1, lista2, lista3):

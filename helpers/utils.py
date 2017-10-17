@@ -1,5 +1,4 @@
 import os
-
 from helpers.struct_p import *
 
 def output(lock, message):
@@ -80,6 +79,7 @@ def loop_int_input(lock, header):
                 continue
             else:
                 return selected
+
 
 # inserimento negli array sala1,2,3 dei pazienti seguendo ordine di immissione
 def inserimento_ordine_arrivo(listp):

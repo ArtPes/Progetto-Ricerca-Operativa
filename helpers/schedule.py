@@ -1,3 +1,4 @@
+from helpers.grafo_gantt import grafo_makespan
 from helpers.soluzione import *
 
 
@@ -81,17 +82,18 @@ def create_mat(nodi):
 def create_mat_bool(nodi):
     matbool = [[0 for i in range(0, len(nodi))] for j in range(0, len(nodi))]
     '''
-    mette a False i nodi che:
-        - hanno stessa riga e colonna
-        - hanno pazienti diversi e lavori diversi
+    mette a True i nodi che:
+        - hanno stesso paziente e ovviamente job diversi
     '''
     for i in range(0, len(nodi)):
         for j in range(0, len(nodi)):
             if nodi[i].visita != -1:  # nodi con valore visita -1 ossia nodi di start ed end
                 matbool[i][j] = False
-            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[
-                j].visita:  # nodi che condividono lo stesso test possono hanno archi disgiuntivi
+            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
                 matbool[i][j] = True
+            #TODO: decommentare qua sotto e togliere le due righe sopra andando però a fare anche l'altro Todo se no non cambia na fava
+            #if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
+            #    matbool[i][j] = True
             else:
                 matbool[i][j] = False  # tutto il resto a false perchè non è variabile
     return matbool
@@ -287,9 +289,9 @@ def process(lists, listp, durataTest):
     #stampa3(ms)
     # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
-    # print("\nStampa Matrice Booleana: ")
-    # stampa3(mstartbool)
-    # stampa_bool(mstartbool)
+    print("\nStampa Matrice Booleana: ")
+    #stampa3(mstartbool)
+    stampa_bool(mstartbool)
 
     # crea una prima soluzione possibile
     soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
@@ -314,4 +316,5 @@ def process(lists, listp, durataTest):
     stampa3(sol.grafo)
     print("\nMAKESPAN FINALE: "+ str(sol.makespan))
 
-    #grafo_makespan(sol.lista_makespan)
+    #stampa un grafo con tutti i makespan trovati
+    #grafo_makespan(sol.lista_makespan,sol.makespan,makespan)

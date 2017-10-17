@@ -1,3 +1,4 @@
+from helpers.grafo_gantt import *
 from helpers.struct_p import *
 
 
@@ -81,10 +82,11 @@ def critical_path(grafo, nodi, durate):
     nodi_visita = []
     nodi_visita.append(0)
     durate.append(0)
+
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
-
+    
     while nodi_visita:
         nodo = nodi_visita[0]
         for i in range(0, len(nodi)):
@@ -101,9 +103,9 @@ def critical_path(grafo, nodi, durate):
     for i in costo:
         if i>makespan:
             makespan = i
-
     '''
-    decommentare quando tabu è sui test per paziente e non su test operatore
+
+    #decommentare quando tabu è sui test per paziente e non su test operatore
     lista_task = insert_task_da_nodo(nodi)
 
     ts1, ts2, ts3 = check_gantt(lista_task)
@@ -115,8 +117,7 @@ def critical_path(grafo, nodi, durate):
     for i in lista_tot:
         if i.end > makespan:
             makespan = i.end
-            '''
-
+    '''
     return makespan
 
 
@@ -212,6 +213,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
+            #TODO: dal grafo creo la sequenza dei nodi da visitare cosi da dare in pasto al gantt
             makespan_temp = critical_path(grafo2, nodi,durate)
             print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
