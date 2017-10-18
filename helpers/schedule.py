@@ -89,11 +89,10 @@ def create_mat_bool(nodi):
         for j in range(0, len(nodi)):
             if nodi[i].visita != -1:  # nodi con valore visita -1 ossia nodi di start ed end
                 matbool[i][j] = False
-            if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
+            #if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
+             #   matbool[i][j] = True
+            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
                 matbool[i][j] = True
-            #TODO: decommentare qua sotto e togliere le due righe sopra andando però a fare anche l'altro Todo se no non cambia na fava
-            #if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
-            #    matbool[i][j] = True
             else:
                 matbool[i][j] = False  # tutto il resto a false perchè non è variabile
     return matbool
@@ -286,7 +285,7 @@ def process(lists, listp, durataTest):
     # crea la soluzione e poi crea matrice bool
     # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
-    #stampa3(ms)
+
     # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
     print("\nStampa Matrice Booleana: ")

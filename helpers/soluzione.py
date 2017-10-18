@@ -2,6 +2,19 @@ from helpers.grafo_gantt import *
 from helpers.struct_p import *
 
 
+def lista_nodi_da_grafo(grafo,nodi):
+
+    #parto da 1 per evitare i nodi start e end
+    for i in range(1,len(nodi)-1):
+        for j in range(1,len(nodi)-1):
+            if grafo[i][j] == 1: # se l'arco è uscente dal nodo i-esimo. Ossia i-->j
+                nodi[i] , nodi[j]= nodi[j], nodi[i]
+
+    return nodi
+
+
+
+
 def check_aciclico(grafo, durate, lista_nodi, max_makespan):
     costo = []
     nodi_visita = []
@@ -82,7 +95,7 @@ def critical_path(grafo, nodi, durate):
     nodi_visita = []
     nodi_visita.append(0)
     durate.append(0)
-
+    '''
     # array di 0 per confrontare i costi
     for i in range(0, len(nodi)):
         costo.append(0)
@@ -103,21 +116,22 @@ def critical_path(grafo, nodi, durate):
     for i in costo:
         if i>makespan:
             makespan = i
+    
     '''
+    new_nodi = lista_nodi_da_grafo(grafo,nodi)
 
-    #decommentare quando tabu è sui test per paziente e non su test operatore
-    lista_task = insert_task_da_nodo(nodi)
+    lista_task = insert_task_da_nodo(new_nodi)
 
     ts1, ts2, ts3 = check_gantt(lista_task)
     # crea il grafo con plotly
-    # grafico_gantt(ts1, ts2, ts3)
+    grafico_gantt(ts1, ts2, ts3)
     # cerco il task con la fine più grande
     lista_tot = ts1 + ts2 + ts3
     makespan = 0
     for i in lista_tot:
         if i.end > makespan:
             makespan = i.end
-    '''
+
     return makespan
 
 
@@ -213,7 +227,6 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
-            #TODO: dal grafo creo la sequenza dei nodi da visitare cosi da dare in pasto al gantt
             makespan_temp = critical_path(grafo2, nodi,durate)
             print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
@@ -361,6 +374,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
             max = durate[i]
     max_makespan = max * len(nodi)
     makespan = max_makespan
+    iterazioni = 3
     while iterazioni > 0:
         iterazioni -= iterazioni
         # cerco i possibili altri archi che posso creare
