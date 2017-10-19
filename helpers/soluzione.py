@@ -124,7 +124,7 @@ def critical_path(grafo, nodi, durate):
 
     ts1, ts2, ts3 = check_gantt(lista_task)
     # crea il grafo con plotly
-    grafico_gantt(ts1, ts2, ts3)
+    #grafico_gantt(ts1, ts2, ts3)
     # cerco il task con la fine più grande
     lista_tot = ts1 + ts2 + ts3
     makespan = 0

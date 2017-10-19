@@ -68,10 +68,13 @@ if __name__ == "__main__":
 
         elif main_menu == 3:
             listp = []
+            ltemp=[]
             with open('helpers/pazienti.txt', 'r') as file_p:
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
+                    ltemp.append(pz)
+
             lists = []
 
             # inserimento random nelle sale volendo da ottimizzare con un'euristica
@@ -90,6 +93,7 @@ if __name__ == "__main__":
                         lists.append(sala3)
 
                 stampa_info_paziente(listp)
-
                 process(lists, listp, durataTest)
+                listp = ltemp
+                lists=[]
                 n =n + 1
