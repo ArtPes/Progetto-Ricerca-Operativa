@@ -305,15 +305,11 @@ def process(lists, listp, durataTest):
     con C(i) costo del percorso fino al nodo i e D(i) durata dell'operazione del nodo i
     '''
 
-    makespan = critical_path(soluzione, nodi, durataTest)
+    makespan, lista_tot = critical_path(soluzione, nodi, durataTest)
     print("\nMakespan è: " + str(makespan))
 
     print("\n TABU SEARCH\n")
     sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
 
-    print("\nGrafo finale: ")
-    stampa3(sol.grafo)
-    print("\nMAKESPAN FINALE: "+ str(sol.makespan))
 
-    #stampa un grafo con tutti i makespan trovati
-    #grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+    return sol

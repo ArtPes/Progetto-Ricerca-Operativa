@@ -8,12 +8,9 @@ def lista_nodi_da_grafo(grafo,nodi):
     for i in range(1,len(nodi)-1):
         for j in range(1,len(nodi)-1):
             if grafo[i][j] == 1: # se l'arco è uscente dal nodo i-esimo. Ossia i-->j
-                nodi[i] , nodi[j]= nodi[j], nodi[i]
+                nodi[i] , nodi[j] = nodi[j], nodi[i]
 
     return nodi
-
-
-
 
 def check_aciclico(grafo, durate, lista_nodi, max_makespan):
     costo = []
@@ -50,7 +47,6 @@ def copia_grafo_booleano(grafo, len_nodi):
                 grafo_new[i][j] = '_'
     return grafo_new
 
-
 def copia_grafo(grafo, len_nodi):
     # creo un nuovo grafo
     h, w = len_nodi, len_nodi
@@ -60,7 +56,6 @@ def copia_grafo(grafo, len_nodi):
         for j in range(0, len_nodi):
             grafo_new[i][j] = grafo[i][j]
     return grafo_new
-
 
 def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
     len_nodi = len(lista_nodi)
@@ -88,7 +83,6 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
     else:
         print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
     return grafo_new
-
 
 def critical_path(grafo, nodi, durate):
     costo = []
@@ -132,8 +126,7 @@ def critical_path(grafo, nodi, durate):
         if i.end > makespan:
             makespan = i.end
 
-    return makespan
-
+    return makespan, lista_tot
 
 def trova_archi(nodi, len_nodi, grafo_disgiuntivo):
     lista = []
@@ -142,7 +135,6 @@ def trova_archi(nodi, len_nodi, grafo_disgiuntivo):
             if grafo_disgiuntivo[i][j] and i < j:
                 lista.append(Arco(nodi[i].visita, i, j))
     return lista
-
 
 def trova_archi_esistenti(nodi, len_nodi, grafo_disgiuntivo, archi_da_decidere, grafo_partenza):
     lista = []
@@ -154,7 +146,6 @@ def trova_archi_esistenti(nodi, len_nodi, grafo_disgiuntivo, archi_da_decidere, 
 
     return lista
 
-
 def cerca_archi_non_esistenti(archi_da_decidere, grafo, num_of_nodi, fixed, nodi):
     temp = []
     size = len(archi_da_decidere)
@@ -165,14 +156,12 @@ def cerca_archi_non_esistenti(archi_da_decidere, grafo, num_of_nodi, fixed, nodi
 
     return temp
 
-
 def conta_entranti(grafo, num_of_nodi, indice_secondo):
     counter = 0
     for i in range(0, num_of_nodi):
         if grafo[indice_secondo][i] == -1:
             counter += counter
     return counter
-
 
 def conta_uscenti(grafo, num_of_nodi, indice_secondo):
     counter = 0
@@ -227,7 +216,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
-            makespan_temp = critical_path(grafo2, nodi,durate)
+            makespan_temp, lista_tot = critical_path(grafo2, nodi,durate)
             print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
             # controllo la tabu list
@@ -252,7 +241,7 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
     if no_mossa:
         makespan = max_makespan
 
-    s = Solution(grafo_temporaneo, makespan, tabu_temp,lista_makespan)
+    s = Solution(grafo_temporaneo, makespan, tabu_temp,lista_makespan, lista_tot)
 
     return s
 
@@ -261,6 +250,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
     archi_esistenti = []
     archi_da_imporre = []
     lista_makespan = []
+    lista_tot = []
 
     archi_esistenti = trova_archi_esistenti(nodi, num_of_nodi, fixed, archi_da_decidere, grafo_iniz)
     archi_da_imporre = cerca_archi_non_esistenti(archi_da_decidere, grafo_iniz, num_of_nodi, fixed, nodi)
@@ -319,7 +309,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
                                    temp2.secondo_estemo)
                 aciclico = check_aciclico(grafo_temporaneo, durate, nodi, max_makespan)
                 if aciclico:
-                    makespan_temporaneo = critical_path(grafo_temporaneo, nodi, durate)
+                    makespan_temporaneo, lista_tot = critical_path(grafo_temporaneo, nodi, durate)
                     print("Makespan remove: " + str(makespan_temporaneo))
                     lista_makespan.append(makespan_temporaneo)
                     if makespan_temporaneo < makespan_precedente:
@@ -340,7 +330,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
     if nessuna_mossa:
         makespan_precedente = max_makespan
 
-    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente,lista_makespan)
+    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente,lista_makespan, lista_tot)
 
     return sol
 
@@ -443,6 +433,6 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                 makespan_candidato_temp = makespan
                 ottimo_candidato_grafo_temp = copia_grafo(grafo_partenza, len(nodi))
                 lista_makespan.append(makespan_candidato_temp)
-        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan)
+        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan, s.lista_tot)
 
         return s

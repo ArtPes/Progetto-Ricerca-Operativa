@@ -1,6 +1,5 @@
 import threading
 import random
-
 from helpers.struct_p import *
 from helpers.schedule import *
 from helpers.utils import *
@@ -43,7 +42,15 @@ if __name__ == "__main__":
                 break
 
             stampa_info_paziente(listp)
-            process(lists, listp, durataTest)
+            sol = process(lists, listp, durataTest)
+
+            print("\nGrafo finale: ")
+            stampa3(sol.grafo)
+            print("\nMAKESPAN FINALE: " + str(sol.makespan))
+
+            # stampa un grafo con tutti i makespan trovati
+            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+
 
         elif main_menu == 2:
             listp = []
@@ -64,11 +71,20 @@ if __name__ == "__main__":
 
             stampa_info_paziente(listp)
 
-            process(lists, listp, durataTest)
+            sol = process(lists, listp, durataTest)
+
+            print("\nGrafo finale: ")
+            stampa3(sol.grafo)
+            print("\nMAKESPAN FINALE: " + str(sol.makespan))
+
+            # stampa un grafo con tutti i makespan trovati
+            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+
 
         elif main_menu == 3:
             listp = []
             ltemp=[]
+            lista_soluzioni = []
             with open('helpers/pazienti.txt', 'r') as file_p:
                 for line in file_p:
                     pz = Paziente(line)
@@ -81,19 +97,37 @@ if __name__ == "__main__":
             # anche solo andando a modificare in modo random la disposizione dei pazienti nelle sale il makespan migliora
             n=0
             while n <5:
-                r = random.random()
-                random.shuffle(listp, lambda: r)
-                sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
-                for i in range(0, 3):
-                    if i == 0:
-                        lists.append(sala1)
-                    if i == 1:
-                        lists.append(sala2)
-                    if i == 2:
-                        lists.append(sala3)
+                    r = random.random()
+                    random.shuffle(listp, lambda: r)
+                    sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
+                    for i in range(0, 3):
+                        if i == 0:
+                            lists.append(sala1)
+                        if i == 1:
+                            lists.append(sala2)
+                        if i == 2:
+                            lists.append(sala3)
 
-                stampa_info_paziente(listp)
-                process(lists, listp, durataTest)
-                listp = ltemp
-                lists=[]
-                n =n + 1
+                    stampa_info_paziente(listp)
+                    sol = process(lists, listp, durataTest)
+                    lista_soluzioni.append(sol)
+                    listp = ltemp
+                    lists = []
+                    n = n + 1
+            max = 0
+            index = 0
+            for i in lista_soluzioni:
+                if i.makespan > max:
+                    max = i.makespan
+                    index = lista_soluzioni.index(i)
+
+            sol = lista_soluzioni[index]
+
+            print("\nGrafo Migliore finale: ")
+            stampa3(sol.grafo)
+            print("\nMAKESPAN MIGLIORE FINALE: " + str(sol.makespan))
+
+            # stampa un grafo con tutti i makespan trovati
+            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+
+
