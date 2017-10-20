@@ -273,7 +273,7 @@ def bubble_sort(l):
     return l
 
 
-def process(lists, listp, durataTest):
+def process(lists, listp, durataTest,stampa):
     mp, ms = set_the_mat(lists, listp)
 
     # stampa_matrici(mp,"paziente","visita")
@@ -288,14 +288,16 @@ def process(lists, listp, durataTest):
 
     # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
-    print("\nStampa Matrice Booleana: ")
-    #stampa3(mstartbool)
-    stampa_bool(mstartbool)
+    if stampa:
+        print("\nStampa Matrice Booleana: ")
+        #stampa3(mstartbool)
+        stampa_bool(mstartbool)
 
     # crea una prima soluzione possibile
-    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest)
-    print("\nStampa di una possibile soluzione: ")
-    stampa3(soluzione)
+    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest,stampa)
+    if stampa:
+        print("\nStampa di una possibile soluzione: ")
+        stampa3(soluzione)
 
     '''
     calcolo il makespan della soluzione_iniziale utilizzando un algoritmo di label correcting 
@@ -305,11 +307,12 @@ def process(lists, listp, durataTest):
     con C(i) costo del percorso fino al nodo i e D(i) durata dell'operazione del nodo i
     '''
 
-    makespan, lista_tot = critical_path(soluzione, nodi, durataTest)
-    print("\nMakespan è: " + str(makespan))
+    makespan, lista_tot = critical_path(soluzione, nodi, durataTest,stampa)
+    if stampa:
+        print("\nMakespan è: " + str(makespan))
 
-    print("\n TABU SEARCH\n")
-    sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest)
+        print("\n TABU SEARCH\n")
+    sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest,stampa)
 
 
     return sol

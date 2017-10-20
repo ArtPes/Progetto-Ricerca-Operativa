@@ -57,7 +57,7 @@ def copia_grafo(grafo, len_nodi):
             grafo_new[i][j] = grafo[i][j]
     return grafo_new
 
-def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
+def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate,stampa):
     len_nodi = len(lista_nodi)
     # creo nuovo grafo a partire dai valori del vecchio grafo
     grafo_new = copia_grafo(grafo, len_nodi)
@@ -70,21 +70,25 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate):
                     trovato = True
                     grafo_new[i][j] = 1
                     grafo_new[j][i] = -1
-                    print("Inserito arco tra: " + str(lista_nodi[i].idN) + "-->" + str(lista_nodi[j].idN))
+                    if stampa:
+                        print("Inserito arco tra: " + str(lista_nodi[i].idN) + "-->" + str(lista_nodi[j].idN))
     max = 0
     for i in range(0, 5):
         if durate[i] > max:
             max = durate[i]
     max_makespan = max * len_nodi
-    print("\nMassimo makespan è:" + str(max_makespan))
+    if stampa:
+        print("\nMassimo makespan è:" + str(max_makespan))
     aciclico = check_aciclico(grafo_new, durate, lista_nodi, max_makespan)
     if aciclico:
-        print("\nNon è ciclico, si può procedere")
+        if stampa:
+            print("\nNon è ciclico, si può procedere")
     else:
-        print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
+        if stampa:
+            print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
     return grafo_new
 
-def critical_path(grafo, nodi, durate):
+def critical_path(grafo, nodi, durate,stampa):
     costo = []
     nodi_visita = []
     nodi_visita.append(0)
@@ -116,7 +120,7 @@ def critical_path(grafo, nodi, durate):
 
     lista_task = insert_task_da_nodo(new_nodi)
 
-    ts1, ts2, ts3 = check_gantt(lista_task)
+    ts1, ts2, ts3 = check_gantt(lista_task,stampa)
     # crea il grafo con plotly
     #grafico_gantt(ts1, ts2, ts3)
     # cerco il task con la fine più grande
@@ -171,7 +175,7 @@ def conta_uscenti(grafo, num_of_nodi, indice_secondo):
     return counter
 
 
-def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan):
+def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan,stampa):
     lista_makespan = []
     size = len(archi_esistenti)
     aciclico = False
@@ -216,8 +220,9 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
-            makespan_temp, lista_tot = critical_path(grafo2, nodi,durate)
-            print("S_Makespan : " + str(makespan_temp))
+            makespan_temp, lista_tot = critical_path(grafo2, nodi,durate,stampa)
+            if stampa:
+                print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
@@ -335,7 +340,7 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
     return sol
 
 
-def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate):
+def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate,stampa):
     lista_makespan = []
     makespan_temp_s = 0
     makespan_temp_r = 0
@@ -350,8 +355,9 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
     # archi su cui apporto decisioni
     archi_da_decidere = trova_archi(nodi, len(nodi), grafo_disgiuntivo)
 
-    for a in archi_da_decidere:
-        print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
+    if stampa:
+        for a in archi_da_decidere:
+            print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
 
     capacity = int(len(durate) / 2 + len(archi_da_decidere) / 10)
 
@@ -373,9 +379,10 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
 
 
         for a in archi_esistenti:
-            print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
+            if stampa:
+                print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
 
-            s = swap(archi_esistenti, grafo_partenza,len(nodi), tabu_list, nodi, durate, makespan_candidato_temp)
+            s = swap(archi_esistenti, grafo_partenza,len(nodi), tabu_list, nodi, durate, makespan_candidato_temp,stampa)
             makespan_temp_s = s.makespan
             #add lista dei makespan trovati con lo swap
             lista_makespan = lista_makespan + s.lista_makespan
@@ -384,7 +391,8 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
             #add lista dei makespan trovati con la remove
             #lista_makespan = lista_makespan + r.lista_makespan
             if makespan_temp_r == makespan_temp_s and makespan_temp_r == max_makespan:
-                print("nessuna mossa disponibile")
+                if stampa:
+                    print("nessuna mossa disponibile")
                 iterazioni = 0
             elif makespan_temp_r < makespan_temp_s:
                 makespan = makespan_temp_r

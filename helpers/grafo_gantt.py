@@ -119,8 +119,7 @@ def trovaS_E(t):
 
     return start, end
 
-def check_gantt(lista_task):
-    time = 0
+def check_gantt(lista_task,stampa):
 
     # metto i task in un array che definisce la sala in cui sono cosi facilito i vincoli tra pazienti nelle salette
     sala1 = []
@@ -145,16 +144,16 @@ def check_gantt(lista_task):
     # vincoli tra pazienti delle 3 salette (test non si sovrappongono)
     vincolo_tra_test_uguali(sala1, sala2, sala3)
 
-
-    for i in sala1:
-            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                i.start) + " End: " + str(i.end))
-    for i in sala2:
-            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                i.start) + " End: " + str(i.end))
-    for i in sala3:
-            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                i.start) + " End: " + str(i.end))
+    if stampa:
+        for i in sala1:
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
+        for i in sala2:
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
+        for i in sala3:
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
 
     return sala1, sala2, sala3
 
