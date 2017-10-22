@@ -1,6 +1,6 @@
 import threading
 import random
-from helpers.prova import *
+from helpers.caricamento import *
 from helpers.schedule import *
 from helpers.utils import *
 from helpers.first_fit_decreasing import *
@@ -14,7 +14,8 @@ if __name__ == "__main__":
     while True:
         # Main Menu
         main_menu = loop_menu(out_lck, "\nSelect one of the following actions ('e' to exit): ",
-                              ["Pazienti Ordinati First Fit Decreasing", "Pazienti inseriti con ordine di arrivo", "Swap Ordine Pazienti"])
+                              ["Pazienti Ordinati First Fit Decreasing", "Pazienti inseriti con ordine di arrivo",
+                               "Swap Ordine Pazienti"])
 
         if main_menu == 1:
 
@@ -44,18 +45,19 @@ if __name__ == "__main__":
 
             stampa_info_paziente(listp)
             stampa = True
-            sol = process(lists, listp, durataTest,stampa)
+            sol = process(lists, listp, durataTest, stampa)
 
             print("\nGrafo finale: ")
             stampa3(sol.grafo)
             print("\nMAKESPAN FINALE: " + str(sol.makespan))
 
             for i in sol.lista_tot:
-                    print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(i.start) + " End: " + str(i.end))
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
 
 
-            # stampa un grafo con tutti i makespan trovati
-            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+                # stampa un grafo con tutti i makespan trovati
+                # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
 
 
         elif main_menu == 2:
@@ -84,15 +86,16 @@ if __name__ == "__main__":
             print("\nMAKESPAN FINALE: " + str(sol.makespan))
 
             for i in sol.lista_tot:
-                    print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(i.start) + " End: " + str(i.end))
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
 
-            # stampa un grafo con tutti i makespan trovati
-            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
+                # stampa un grafo con tutti i makespan trovati
+                # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
 
 
         elif main_menu == 3:
             listp = []
-            ltemp=[]
+            ltemp = []
             lista_soluzioni = []
             with open('helpers/pazienti.txt', 'r') as file_p:
                 for line in file_p:
@@ -104,10 +107,10 @@ if __name__ == "__main__":
 
             # inserimento random nelle sale volendo da ottimizzare con un'euristica
             # anche solo andando a modificare in modo random la disposizione dei pazienti nelle sale il makespan migliora
-            n=0
+            n = 0
 
             stampa = False
-            while n <5:
+            while n < 5:
                 progress = ProgressBar(10, fmt=ProgressBar.FULL)
                 for x in range(progress.total):
                     progress.current += 1
@@ -123,7 +126,7 @@ if __name__ == "__main__":
                         if i == 2:
                             lists.append(sala3)
 
-                    #stampa_info_paziente(listp)
+                    # stampa_info_paziente(listp)
                     sol = process(lists, listp, durataTest, stampa)
                     lista_soluzioni.append(sol)
                     listp = ltemp
@@ -142,24 +145,22 @@ if __name__ == "__main__":
 
             lista_sol_migliori = []
             for i in lista_soluzioni:
-                if i.makespan== sol.makespan:
+                if i.makespan == sol.makespan:
                     lista_sol_migliori.append(i)
 
             for i in lista_sol_migliori:
                 print(i.makespan)
 
             for i in range(0, len(lista_sol_migliori)):
-                if i<len(lista_sol_migliori)-1:
-                    if lista_sol_migliori[i].lista_tot == lista_sol_migliori[i+1].lista_tot:
+                if i < len(lista_sol_migliori) - 1:
+                    if lista_sol_migliori[i].lista_tot == lista_sol_migliori[i + 1].lista_tot:
                         print("Uguali")
                     else:
-                        print("Diversi"+str(i))
+                        print("Diversi" + str(i))
 
-            #print("\nGrafo Migliore finale: ")
-            #stampa3(sol.grafo)
-            #print("\nMAKESPAN MIGLIORE FINALE: " + str(sol.makespan))
+                        # print("\nGrafo Migliore finale: ")
+                        # stampa3(sol.grafo)
+                        # print("\nMAKESPAN MIGLIORE FINALE: " + str(sol.makespan))
 
-            # stampa un grafo con tutti i makespan trovati
-            # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
-
-
+                        # stampa un grafo con tutti i makespan trovati
+                        # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)

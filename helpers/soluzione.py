@@ -2,15 +2,15 @@ from helpers.grafo_gantt import *
 from helpers.struct_p import *
 
 
-def lista_nodi_da_grafo(grafo,nodi):
-
-    #parto da 1 per evitare i nodi start e end
-    for i in range(1,len(nodi)-1):
-        for j in range(1,len(nodi)-1):
-            if grafo[i][j] == 1: # se l'arco è uscente dal nodo i-esimo. Ossia i-->j
-                nodi[i] , nodi[j] = nodi[j], nodi[i]
+def lista_nodi_da_grafo(grafo, nodi):
+    # parto da 1 per evitare i nodi start e end
+    for i in range(1, len(nodi) - 1):
+        for j in range(1, len(nodi) - 1):
+            if grafo[i][j] == 1:  # se l'arco è uscente dal nodo i-esimo. Ossia i-->j
+                nodi[i], nodi[j] = nodi[j], nodi[i]
 
     return nodi
+
 
 def check_aciclico(grafo, durate, lista_nodi, max_makespan):
     costo = []
@@ -34,6 +34,7 @@ def check_aciclico(grafo, durate, lista_nodi, max_makespan):
         nodi_visita.remove(nodo)
     return True
 
+
 def copia_grafo_booleano(grafo, len_nodi):
     # creo un nuovo grafo
     h, w = len_nodi, len_nodi
@@ -47,6 +48,7 @@ def copia_grafo_booleano(grafo, len_nodi):
                 grafo_new[i][j] = '_'
     return grafo_new
 
+
 def copia_grafo(grafo, len_nodi):
     # creo un nuovo grafo
     h, w = len_nodi, len_nodi
@@ -57,7 +59,8 @@ def copia_grafo(grafo, len_nodi):
             grafo_new[i][j] = grafo[i][j]
     return grafo_new
 
-def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate,stampa):
+
+def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate, stampa):
     len_nodi = len(lista_nodi)
     # creo nuovo grafo a partire dai valori del vecchio grafo
     grafo_new = copia_grafo(grafo, len_nodi)
@@ -88,41 +91,20 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate,stampa):
             print("\nE' ciclico, vi è un LOOP !!!!!!!!!")
     return grafo_new
 
-def critical_path(grafo, nodi, durate,stampa):
+
+def critical_path(grafo, nodi, durate, stampa):
     costo = []
     nodi_visita = []
     nodi_visita.append(0)
     durate.append(0)
-    '''
-    # array di 0 per confrontare i costi
-    for i in range(0, len(nodi)):
-        costo.append(0)
-    
-    while nodi_visita:
-        nodo = nodi_visita[0]
-        for i in range(0, len(nodi)):
-            if grafo[nodo][i] == 1:
-                if not i in nodi_visita:
-                    nodi_visita.append(i)
-                    test = nodi[i].visita
-                    if test == -1:
-                        test = 5
-                    if costo[nodo] + durate[test] >= costo[i]:
-                        costo[i] = durate[test] + costo[nodo]
-        nodi_visita.remove(nodo)
-    makespan = 0
-    for i in costo:
-        if i>makespan:
-            makespan = i
-    
-    '''
-    new_nodi = lista_nodi_da_grafo(grafo,nodi)
+
+    new_nodi = lista_nodi_da_grafo(grafo, nodi)
 
     lista_task = insert_task_da_nodo(new_nodi)
 
-    ts1, ts2, ts3 = check_gantt(lista_task,stampa)
+    ts1, ts2, ts3 = check_gantt(lista_task, stampa)
     # crea il grafo con plotly
-    #grafico_gantt(ts1, ts2, ts3)
+    # grafico_gantt(ts1, ts2, ts3)
     # cerco il task con la fine più grande
     lista_tot = ts1 + ts2 + ts3
     makespan = 0
@@ -132,6 +114,7 @@ def critical_path(grafo, nodi, durate,stampa):
 
     return makespan, lista_tot
 
+
 def trova_archi(nodi, len_nodi, grafo_disgiuntivo):
     lista = []
     for i in range(1, len_nodi):
@@ -140,15 +123,18 @@ def trova_archi(nodi, len_nodi, grafo_disgiuntivo):
                 lista.append(Arco(nodi[i].visita, i, j))
     return lista
 
+
 def trova_archi_esistenti(nodi, len_nodi, grafo_disgiuntivo, archi_da_decidere, grafo_partenza):
     lista = []
 
     for i in range(0, len(archi_da_decidere)):
-        arco = Arco(archi_da_decidere[i].visita, archi_da_decidere[i].primo_estremo, archi_da_decidere[i].secondo_estremo)
+        arco = Arco(archi_da_decidere[i].visita, archi_da_decidere[i].primo_estremo,
+                    archi_da_decidere[i].secondo_estremo)
         if grafo_partenza[arco.primo_estremo][arco.secondo_estremo] != 0:
             lista.append(arco)
 
     return lista
+
 
 def cerca_archi_non_esistenti(archi_da_decidere, grafo, num_of_nodi, fixed, nodi):
     temp = []
@@ -160,12 +146,14 @@ def cerca_archi_non_esistenti(archi_da_decidere, grafo, num_of_nodi, fixed, nodi
 
     return temp
 
+
 def conta_entranti(grafo, num_of_nodi, indice_secondo):
     counter = 0
     for i in range(0, num_of_nodi):
         if grafo[indice_secondo][i] == -1:
             counter += counter
     return counter
+
 
 def conta_uscenti(grafo, num_of_nodi, indice_secondo):
     counter = 0
@@ -175,8 +163,9 @@ def conta_uscenti(grafo, num_of_nodi, indice_secondo):
     return counter
 
 
-def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan,stampa):
+def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_candidato_makespan, stampa):
     lista_makespan = []
+    lista_task = []
     size = len(archi_esistenti)
     aciclico = False
     temp = Arco(0, 0, 0)
@@ -220,10 +209,11 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
 
         # se è aciclico calcolo il makespan
         if (aciclico):
-            makespan_temp, lista_tot = critical_path(grafo2, nodi,durate,stampa)
+            makespan_temp, lista_tot = critical_path(grafo2, nodi, durate, stampa)
             if stampa:
                 print("S_Makespan : " + str(makespan_temp))
             lista_makespan.append(makespan_temp)
+            lista_task.append(lista_tot)
             # controllo la tabu list
             # se è una mossa tabù controllo se il nuovo makespan è migliore dell'ottimo candidato(criterio di aspirazione)
             if mossa_temp in tabu_list:
@@ -246,7 +236,9 @@ def swap(archi_esistenti, grafo, num_of_nodi, tabu_list, nodi, durate, ottimo_ca
     if no_mossa:
         makespan = max_makespan
 
-    s = Solution(grafo_temporaneo, makespan, tabu_temp,lista_makespan, lista_tot)
+    best_index = lista_makespan.index(makespan)
+    lista_task_finale = lista_task[best_index]
+    s = Solution(grafo_temporaneo, makespan, tabu_temp, lista_makespan, lista_task_finale)
 
     return s
 
@@ -335,17 +327,21 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
     if nessuna_mossa:
         makespan_precedente = max_makespan
 
-    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente,lista_makespan, lista_tot)
+    sol = Solution(grafo_precedente, makespan_precedente, mossa_precedente, lista_makespan, lista_tot)
 
     return sol
 
 
-def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate,stampa):
-    lista_makespan = []
+def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate, stampa):
+    lista_makespan = []  # salvo tutti i makespan trovati
+    lista_task = []  # salvo le varie combinazioni di task
+    lista_mak_per_sol = []  # salvo i migliori makespan trovati dalla swap
+    lista_soluzioni = []
+    index = 0
     makespan_temp_s = 0
     makespan_temp_r = 0
     makespan_candidato_temp = makespan_candidato
-    ottimo_candidato_grafo_temp = copia_grafo(grafo_candidato,len(nodi))
+    ottimo_candidato_grafo_temp = copia_grafo(grafo_candidato, len(nodi))
 
     grafo_partenza = copia_grafo(ottimo_candidato_grafo_temp, len(nodi))
 
@@ -377,19 +373,23 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
         archi_esistenti = []
         archi_esistenti = trova_archi_esistenti(nodi, len(nodi), grafo_disgiuntivo, archi_da_decidere, grafo_partenza)
 
-
         for a in archi_esistenti:
             if stampa:
                 print("Visita: " + str(a.visita) + " Archi: " + str(a.primo_estremo) + "," + str(a.secondo_estremo))
 
-            s = swap(archi_esistenti, grafo_partenza,len(nodi), tabu_list, nodi, durate, makespan_candidato_temp,stampa)
+            s = swap(archi_esistenti, grafo_partenza, len(nodi), tabu_list, nodi, durate, makespan_candidato_temp,
+                     stampa)
             makespan_temp_s = s.makespan
-            #add lista dei makespan trovati con lo swap
+            # add lista dei makespan trovati con lo swap
             lista_makespan = lista_makespan + s.lista_makespan
-            r = remove(archi_da_decidere, grafo_partenza, len(nodi), tabu_list, nodi, durate, makespan_candidato_temp, grafo_disgiuntivo)
+            lista_mak_per_sol.append(makespan_candidato_temp)
+            lista_task.append(s.lista_tot)
+            r = remove(archi_da_decidere, grafo_partenza, len(nodi), tabu_list, nodi, durate, makespan_candidato_temp,
+                       grafo_disgiuntivo)
             makespan_temp_r = r.makespan
-            #add lista dei makespan trovati con la remove
-            #lista_makespan = lista_makespan + r.lista_makespan
+
+            # add lista dei makespan trovati con la remove
+            # lista_makespan = lista_makespan + r.lista_makespan
             if makespan_temp_r == makespan_temp_s and makespan_temp_r == max_makespan:
                 if stampa:
                     print("nessuna mossa disponibile")
@@ -398,7 +398,6 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                 makespan = makespan_temp_r
                 m = r.Mossa
                 inversa = Mossa(m.tipo, m.m, m.pisa, m.sisa, m.pipa, m.sipa)
-
                 grafo_partenza = copia_grafo(r.grafo, len(nodi))
 
                 if not m in tabu_list and not inversa in tabu_list:
@@ -418,29 +417,42 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                     tabu_list.append(inversa)
 
             elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
-                    #print("Ho scelto la mossa: ")
-                    #print("[" + str(s.m.tipo) + " " + str(s.m) + " " + str(s.pipa) + " " + str(s.sipa) + " " + str(s.pisa) + " " + str(s.sisa) + "]")
-                    makespan = makespan_temp_s
-                    grafo_partenza = copia_grafo(s.grafo, len(nodi))
+                # print("Ho scelto la mossa: ")
+                # print("[" + str(s.m.tipo) + " " + str(s.m) + " " + str(s.pipa) + " " + str(s.sipa) + " " + str(s.pisa) + " " + str(s.sisa) + "]")
+                makespan = makespan_temp_s
+                grafo_partenza = copia_grafo(s.grafo, len(nodi))
 
-                    if not s.Mossa in tabu_list:
-                        if len(tabu_list) < capacity:
-                            tabu_list.append(s.Mossa)
-                        else:
-                            tabu_list.remove(tabu_list[0])
-                            tabu_list.append(s.Mossa)
-
-                    # se la mossa swap è già in tabù list la ricolloco in fondo
-                    else:
-                        index = tabu_list.index(s.Mossa)
-                        tabu_list.remove(index)
+                if not s.Mossa in tabu_list:
+                    if len(tabu_list) < capacity:
                         tabu_list.append(s.Mossa)
+                    else:
+                        tabu_list.remove(tabu_list[0])
+                        tabu_list.append(s.Mossa)
+
+                # se la mossa swap è già in tabù list la ricolloco in fondo
+                else:
+                    index = tabu_list.index(s.Mossa)
+                    tabu_list.remove(index)
+                    tabu_list.append(s.Mossa)
 
             # se il risultato appena ottenuto è migliore dell'ottimo candidato allora sostituisco l'ottimo candidato
             if makespan < makespan_candidato_temp:
                 makespan_candidato_temp = makespan
                 ottimo_candidato_grafo_temp = copia_grafo(grafo_partenza, len(nodi))
-                lista_makespan.append(makespan_candidato_temp)
-        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan, s.lista_tot)
+                lista_makespan.append(makespan)
+
+
+        # TODO: non va un cazzo. Ho la lista dei makespan, scelgo il migliore e mi salvo l'indice. Ho allora una
+        # lista di liste task in cui mi salvavo le varia combinazioni ottime risultato della swap, e quindi dovrei
+        # avere che il makespan di ognuna di quelle lista corrisponde al max tempo di end dei task
+        best_index = lista_mak_per_sol.index(makespan_candidato_temp)
+        lista_task_finale = lista_task[best_index]
+        print("Makespan ottimo :"+str(makespan_candidato_temp))
+        print("Lista makespan: "+str(lista_mak_per_sol))
+        for l in lista_task_finale:
+                print("End: "+str(l.end))
+
+        s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan,
+                     lista_task_finale)
 
         return s
