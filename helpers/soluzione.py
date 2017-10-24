@@ -93,18 +93,13 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate, stampa):
 
 
 def critical_path(grafo, nodi, durate, stampa):
-    costo = []
-    nodi_visita = []
-    nodi_visita.append(0)
-    durate.append(0)
 
     new_nodi = lista_nodi_da_grafo(grafo, nodi)
 
     lista_task = insert_task_da_nodo(new_nodi)
 
     ts1, ts2, ts3 = check_gantt(lista_task, stampa)
-    # crea il grafo con plotly
-    # grafico_gantt(ts1, ts2, ts3)
+
     # cerco il task con la fine più grande
     lista_tot = ts1 + ts2 + ts3
     makespan = 0
@@ -417,8 +412,6 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                     tabu_list.append(inversa)
 
             elif makespan_temp_s <= makespan_temp_s and makespan_temp_s != max_makespan:
-                # print("Ho scelto la mossa: ")
-                # print("[" + str(s.m.tipo) + " " + str(s.m) + " " + str(s.pipa) + " " + str(s.sipa) + " " + str(s.pisa) + " " + str(s.sisa) + "]")
                 makespan = makespan_temp_s
                 grafo_partenza = copia_grafo(s.grafo, len(nodi))
 

@@ -58,25 +58,36 @@ def grafo_makespan(lista,makespan_end,makespan_start):
     # Plot and embed in ipython notebook!
     py.plot(data, filename='basic-scatter')
 
-def grafico_gantt(lista1, lista2, lista3):
+def grafico_gantt(lista):
     df = []
+    lista1 = []
+    lista2 = []
+    lista3 = []
+    for f in lista:
+        if f.sala == 1:
+            lista1.append(f)
+        elif f.sala == 2:
+            lista2.append(f)
+        elif f.sala == 3:
+            lista3.append(f)
+
 
     for t in lista1:
         start, end = trovaS_E(t)
-        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 " + start + ":00:00",
-                 Finish='2017-01-01 ' + end + ":00:00", Resource='Test' + str(t.test))
+        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 01:" + start + ":00",
+                 Finish="2017-01-01 01:" + end + ":00", Resource='Test' + str(t.test))
         df.append(a)
 
     for t in lista2:
         start, end = trovaS_E(t)
-        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 " + start + ":00:00",
-                 Finish='2017-01-01 ' + end + ":00:00", Resource='Test' + str(t.test))
+        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 01:" + start + ":00",
+                 Finish="2017-01-01 01:" + end + ":00", Resource='Test' + str(t.test))
         df.append(a)
 
     for t in lista3:
         start, end = trovaS_E(t)
-        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 " + start + ":00:00",
-                 Finish='2017-01-01 ' + end + ":00:00", Resource='Test' + str(t.test))
+        a = dict(Task='Sala' + str(t.sala), Start="2017-01-01 01:" + start + ":00",
+                 Finish="2017-01-01 01:" + end + ":00", Resource='Test' + str(t.test))
         df.append(a)
 
     colors = dict(Test1='rgb(0, 255, 0)',

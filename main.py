@@ -18,7 +18,12 @@ if __name__ == "__main__":
                                "Swap Ordine Pazienti"])
 
         if main_menu == 1:
-
+            print("Stampa di tutte le info? 1 Si   2 No")
+            a = input()
+            if int(a) == 1:
+                stampa = True
+            elif int(a) == 2:
+                stampa = False
             listp = []
             with open('helpers/pazienti.txt', 'r') as file_p:
                 for line in file_p:
@@ -44,7 +49,6 @@ if __name__ == "__main__":
                 break
 
             stampa_info_paziente(listp)
-            stampa = True
             sol = process(lists, listp, durataTest, stampa)
 
             print("\nGrafo finale: ")
@@ -55,12 +59,13 @@ if __name__ == "__main__":
                 print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
                     i.start) + " End: " + str(i.end))
 
-
-                # stampa un grafo con tutti i makespan trovati
-                # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
-
-
         elif main_menu == 2:
+            print("Stampa di tutte le info? 1 Si   2 No")
+            a = input()
+            if int(a) == 1:
+                stampa = True
+            elif int(a) == 2:
+                stampa = False
             listp = []
             with open('helpers/pazienti.txt', 'r') as file_p:
                 for line in file_p:
@@ -89,11 +94,8 @@ if __name__ == "__main__":
                 print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
                     i.start) + " End: " + str(i.end))
 
-                # stampa un grafo con tutti i makespan trovati
-                # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)
-
-
         elif main_menu == 3:
+            stampa = False
             listp = []
             ltemp = []
             lista_soluzioni = []
@@ -105,13 +107,13 @@ if __name__ == "__main__":
 
             lists = []
 
-            # inserimento random nelle sale volendo da ottimizzare con un'euristica
-            # anche solo andando a modificare in modo random la disposizione dei pazienti nelle sale il makespan migliora
+            # inserimento random nelle sale volendo da ottimizzare con un'euristica anche solo andando a modificare
+            # in modo random la disposizione dei pazienti nelle sale il makespan migliora
             n = 0
-
-            stampa = False
+            # !!!!NUMERO DI CICLI!!!!
+            cicli = 10
             while n < 5:
-                progress = ProgressBar(10, fmt=ProgressBar.FULL)
+                progress = ProgressBar(cicli, fmt=ProgressBar.FULL)
                 for x in range(progress.total):
                     progress.current += 1
                     progress()
@@ -158,9 +160,3 @@ if __name__ == "__main__":
                     else:
                         print("Diversi" + str(i))
 
-                        # print("\nGrafo Migliore finale: ")
-                        # stampa3(sol.grafo)
-                        # print("\nMAKESPAN MIGLIORE FINALE: " + str(sol.makespan))
-
-                        # stampa un grafo con tutti i makespan trovati
-                        # grafo_makespan(sol.lista_makespan,sol.makespan,makespan)

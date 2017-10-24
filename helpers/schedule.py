@@ -28,7 +28,7 @@ def set_the_mat(lists, listp):
     return (matrixp, matrixs)
 
 
-def crea_nodo(mp,ms):
+def crea_nodo(mp, ms):
     # creo nodo da lista pazienti (paz,visita)
     nodi = []
     numn = 0
@@ -37,21 +37,17 @@ def crea_nodo(mp,ms):
     for i in range(0, len(mp)):
         for j in range(0, len(mp[i])):
             numn += 1
-            nd = Nodo(numn, i + 1, mp[i][j]+1,0)
+            nd = Nodo(numn, i + 1, mp[i][j] + 1, 0)
 
             nodi.append(nd)
 
-    for i in range(0,len(nodi)):
-        for  k in range(0,len(ms)):
-            for j in range(0,len(ms[k])):
-                if ms[k][j]== nodi[i].idP :
-                    nodi[i].sala=k+1
-    nd = Nodo(numn + 1 , 0 , 0 , 0 )
+    for i in range(0, len(nodi)):
+        for k in range(0, len(ms)):
+            for j in range(0, len(ms[k])):
+                if ms[k][j] == nodi[i].idP:
+                    nodi[i].sala = k + 1
+    nd = Nodo(numn + 1, 0, 0, 0)
     nodi.append(nd)
-
-    # stampa nodi per creare grafo a mano easy
-    #for nd in nodi:
-        #print("Nodo " + str(nd.idN) + ": (" + str(nd.idP) + "," + str(nd.visita) +","+ str(nd.sala)+")")
 
     return nodi, numn
 
@@ -89,9 +85,8 @@ def create_mat_bool(nodi):
         for j in range(0, len(nodi)):
             if nodi[i].visita != -1:  # nodi con valore visita -1 ossia nodi di start ed end
                 matbool[i][j] = False
-            #if nodi[i].idP != nodi[j].idP and nodi[i].visita == nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
-             #   matbool[i][j] = True
-            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
+            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[
+                j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
                 matbool[i][j] = True
             else:
                 matbool[i][j] = False  # tutto il resto a false perchè non è variabile
@@ -103,27 +98,6 @@ def create_mat_bool(nodi):
 # mats e' la lista delle salette che mi serve per capire chi inizia e finisce le op
 def create_initial_sol(matp, nodi, mats):
     # 1 per uscenti dal nodo, -1 per entranti
-    st_op = []  # start operation
-    last_op = []  # last operation
-    # metto a 0 le celle con righe=colonne
-    """for i in range(0,len(matp)):
-        for j in range(0,len(matp[i])):
-            if i == j:
-                    matp[i][j]=0"""
-    # cerco operazioni iniziali nodo 0
-    """for i in range(0, len(mats)):
-        st_op.append(mats[i][0])
-        print("mats i0:"+str(mats[i][0]))
-    print("\nPazienti che possono essere successivi al nodo iniziale: "+str(st_op))
-    for i in range(0, len(st_op)):
-        max_percorso=0
-        for j in range(0, len(matp)):
-            if nodi[j].idP == st_op[i]:
-                if max_percorso< nodi[j].visita:
-                    max_percorso= nodi[j].visita
-                    matp[0][nodi[j].idP+1] = 1
-                    matp[nodi[j].idP+1][0] = -1"""
-
     fst_nd = []  # primi nodi
     max_tmp = 0
     ind = 0
@@ -139,14 +113,6 @@ def create_initial_sol(matp, nodi, mats):
         matp[ind][0] = -1
 
     # stessa cosa per nodo finale
-    """for i in range(0, len(mats)):
-        last_op.append(mats[i][len(mats[i]) - 1])
-    print("\nPazienti che possono raggiungere il nodo finale: "+str(last_op))
-    for i in range(0, len(last_op)):
-        for j in range(0, len(matp)):
-            if nodi[j].idP == last_op[i]:
-                matp[len(matp[j]) - 1][j] = -1
-                matp[j][len(matp[j]) - 1] = 0"""
     lst_nd = []  # ultimi nodi
     min_tmp = 9  # inizializzo al max delle visite+1
     for i in range(0, len(mats)):
@@ -273,46 +239,42 @@ def bubble_sort(l):
     return l
 
 
-def process(lists, listp, durataTest,stampa):
+def process(lists, listp, durataTest, stampa):
     mp, ms = set_the_mat(lists, listp)
 
-    # stampa_matrici(mp,"paziente","visita")
-    # stampa_matrici(ms, "saletta", "paziente")
-
-    nodi, numn = crea_nodo(mp,ms)
+    nodi, numn = crea_nodo(mp, ms)
     mstart = create_mat(nodi)
 
     # crea la soluzione e poi crea matrice bool
-    # matp = create_initial_sol(mstart, nodi, ms)
     matp = initial_sol(mstart, nodi, ms, listp)
 
     # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
     mstartbool = create_mat_bool(nodi)
     if stampa:
         print("\nStampa Matrice Booleana: ")
-        #stampa3(mstartbool)
+        # stampa3(mstartbool)
         stampa_bool(mstartbool)
 
-    # crea una prima soluzione possibile
-    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest,stampa)
+    # inserisco archi tra nodi che hanno la stessa visita
+    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest, stampa)
     if stampa:
         print("\nStampa di una possibile soluzione: ")
         stampa3(soluzione)
 
-    '''
-    calcolo il makespan della soluzione_iniziale utilizzando un algoritmo di label correcting 
-    adattato alla ricerca del critical path di un grafo:
-    la condizione di bellman utilizzata per l'aggiornamento della label del costo 
-    è C(nodo_precedente)+D(nodo_precedente)>C(nodo_attuale)
-    con C(i) costo del percorso fino al nodo i e D(i) durata dell'operazione del nodo i
-    '''
+    # calcolo makespan usando la black box
+    makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
 
-    makespan, lista_tot = critical_path(soluzione, nodi, durataTest,stampa)
+    if stampa:
+        # crea il grafo con plotly con la prima soluzione
+        grafico_gantt(lista_tot)
     if stampa:
         print("\nMakespan è: " + str(makespan))
-
         print("\n TABU SEARCH\n")
-    sol = tabu_search(soluzione,makespan,mstartbool,nodi,durataTest,stampa)
+    sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
+    if stampa:
+        # crea il grafo con plotly con la soluzione trovata dalla tabu
+        grafico_gantt(sol.lista_tot)
 
-
+        # stampa un grafo con tutti i makespan trovati
+        grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
     return sol
