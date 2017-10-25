@@ -94,6 +94,8 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate, stampa):
 
 def critical_path(grafo, nodi, durate, stampa):
 
+    # non ci interessa tanto il percorso migliore fra i nodi, ma il loro makespan. Questo perchè la scelta della
+    # posizione di un task non influisce solo sul singolo cammino di un paziente ma anche su quello degli altri
     new_nodi = lista_nodi_da_grafo(grafo, nodi)
 
     lista_task = insert_task_da_nodo(new_nodi)
@@ -330,9 +332,6 @@ def remove(archi_da_decidere, grafo_iniz, num_of_nodi, tabu_list, nodi, durate, 
 def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, durate, stampa):
     lista_makespan = []  # salvo tutti i makespan trovati
     lista_task = []  # salvo le varie combinazioni di task
-    lista_mak_per_sol = []  # salvo i migliori makespan trovati dalla swap
-    lista_soluzioni = []
-    index = 0
     makespan_temp_s = 0
     makespan_temp_r = 0
     makespan_candidato_temp = makespan_candidato
@@ -377,8 +376,9 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
             makespan_temp_s = s.makespan
             # add lista dei makespan trovati con lo swap
             lista_makespan = lista_makespan + s.lista_makespan
-            lista_mak_per_sol.append(makespan_candidato_temp)
-            lista_task.append(s.lista_tot)
+
+            lista_task = check_best_lista_task(s.lista_tot, lista_task)
+
             r = remove(archi_da_decidere, grafo_partenza, len(nodi), tabu_list, nodi, durate, makespan_candidato_temp,
                        grafo_disgiuntivo)
             makespan_temp_r = r.makespan
@@ -421,7 +421,6 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                     else:
                         tabu_list.remove(tabu_list[0])
                         tabu_list.append(s.Mossa)
-
                 # se la mossa swap è già in tabù list la ricolloco in fondo
                 else:
                     index = tabu_list.index(s.Mossa)
@@ -434,18 +433,29 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
                 ottimo_candidato_grafo_temp = copia_grafo(grafo_partenza, len(nodi))
                 lista_makespan.append(makespan)
 
-
-        # TODO: non va un cazzo. Ho la lista dei makespan, scelgo il migliore e mi salvo l'indice. Ho allora una
-        # lista di liste task in cui mi salvavo le varia combinazioni ottime risultato della swap, e quindi dovrei
-        # avere che il makespan di ognuna di quelle lista corrisponde al max tempo di end dei task
-        best_index = lista_mak_per_sol.index(makespan_candidato_temp)
-        lista_task_finale = lista_task[best_index]
-        print("Makespan ottimo :"+str(makespan_candidato_temp))
-        print("Lista makespan: "+str(lista_mak_per_sol))
-        for l in lista_task_finale:
-                print("End: "+str(l.end))
-
         s = Solution(ottimo_candidato_grafo_temp, makespan_candidato_temp, Mossa('f', 0, 0, 0, 0, 0), lista_makespan,
-                     lista_task_finale)
+                     lista_task)
 
         return s
+
+
+def check_best_lista_task(slista_tot, lista_task):
+    if not lista_task: # se la lista è vuota la inizializzo
+        lista_task = slista_tot
+    elif lista_task:
+        m = 0
+        for l in slista_tot: # prendo valore del più grande end
+            if l.end >= m:
+                m = l.end
+        p = 0
+        for k in lista_task: # prendo valore del più grande end
+            if k.end >= p:
+                p = k.end
+        if p >= m:           # se end della nuova lista è minore o uguale a end della vecchia sostituisco la lista task
+            lista_task = slista_tot
+
+    return lista_task
+
+
+# def greedyrandomizedCostruction():
+

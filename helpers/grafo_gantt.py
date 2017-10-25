@@ -35,7 +35,7 @@ def grafo_makespan(lista,makespan_end,makespan_start):
         x=random_x,
         y=random_y,
         mode='markers',
-        name = 'Makespan Swap & Remove',
+        name = 'Makespan Tabu',
         marker = dict(size = 10)
     )
     trace1 = go.Scatter(

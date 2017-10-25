@@ -83,7 +83,6 @@ if __name__ == "__main__":
                     lists.append(sala3)
 
             stampa_info_paziente(listp)
-            stampa = True
             sol = process(lists, listp, durataTest, stampa)
 
             print("\nGrafo finale: ")
@@ -134,8 +133,21 @@ if __name__ == "__main__":
                     listp = ltemp
                     lists = []
                     n = n + 1
+            '''
+                iter = 0
+                while iter < 10:
+                    # seleziono la mia sol random Best con relativo costo
+                    sol_Best = lista_soluzioni[i]
+                    costo_Best = lista_soluzioni[i].makespan
+                    #
+                    sol_Cand = greedyrandomizedCostruction()
+                    costo_Sol = critical_path()
+                    if costo_Sol < costo_Best:
+                        sol_Best = sol_Cand
+                        iter += 1
                 progress.done()
-
+            '''
+            '''
             max = 1000
             index = 0
             for i in lista_soluzioni:
@@ -159,4 +171,5 @@ if __name__ == "__main__":
                         print("Uguali")
                     else:
                         print("Diversi" + str(i))
+            '''
 
