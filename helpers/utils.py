@@ -1,10 +1,12 @@
 import os
 from helpers.struct_p import *
 
+
 def output(lock, message):
     lock.acquire()
     print(message)
     lock.release()
+
 
 def loop_menu(lock, header, options):
     action = None
@@ -38,6 +40,7 @@ def loop_menu(lock, header, options):
                 else:
                     return selected
 
+
 def loop_input(lock, header):
     var = None
     while var is None:
@@ -55,6 +58,7 @@ def loop_input(lock, header):
             return None
         else:
             return var
+
 
 def loop_int_input(lock, header):
     var = None
@@ -112,6 +116,7 @@ def inserimento_ordine_arrivo(listp):
 
     return sala1, sala2, sala3
 
+
 # inserimento negli array sala1,2,3 dei pazienti
 def inserimento_sala(listp):
     saletta = [1, 2, 3]
@@ -134,6 +139,7 @@ def inserimento_sala(listp):
 
     return sala1, sala2, sala3
 
+
 # stamapa le info del paziente (volendo aggiungere durata tot e altre info)
 def stampa_info_paziente(listp):
     for i in range(0, len(listp)):
@@ -143,8 +149,9 @@ def stampa_info_paziente(listp):
 
         print("Paziente: " + str(id) + " Saletta: " + str(sala) + " Test: " + str(test))
 
+
 def stampa_info_saletta(lists):
-    for i in range(0,len(lists)):
-        print("saletta "+ str(i+1) +str(lists[i]))
+    for i in range(0, len(lists)):
+        print("saletta " + str(i + 1) + str(lists[i]))
 
 

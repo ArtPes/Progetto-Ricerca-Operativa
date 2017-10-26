@@ -68,7 +68,7 @@ def soluzione_iniziale(grafo, grafo_fixed, lista_nodi, durate, stampa):
     for i in range(0, len_nodi):
         trovato = False
         for j in range(0, len_nodi):
-            if lista_nodi[i].visita == lista_nodi[j].visita and j > i and not trovato:
+            if lista_nodi[i].visita != lista_nodi[j].visita and lista_nodi[i].idP == lista_nodi[j].idP and j > i and not trovato:
                 if grafo_fixed[i][j]:
                     trovato = True
                     grafo_new[i][j] = 1

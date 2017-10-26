@@ -83,10 +83,7 @@ def create_mat_bool(nodi):
     '''
     for i in range(0, len(nodi)):
         for j in range(0, len(nodi)):
-            if nodi[i].visita != -1:  # nodi con valore visita -1 ossia nodi di start ed end
-                matbool[i][j] = False
-            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[
-                j].visita:  # nodi che condividono lo stesso paziente possono hanno archi disgiuntivi
+            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita: # nodi che condividono lo stesso paziente hanno archi disgiuntivi
                 matbool[i][j] = True
             else:
                 matbool[i][j] = False  # tutto il resto a false perchè non è variabile
@@ -97,6 +94,7 @@ def create_mat_bool(nodi):
 # nodi e' la lista dei nodi
 # mats e' la lista delle salette che mi serve per capire chi inizia e finisce le op
 def create_initial_sol(matp, nodi, mats):
+    # TODO: funzione inutile, non la chiamiamo mai
     # 1 per uscenti dal nodo, -1 per entranti
     fst_nd = []  # primi nodi
     max_tmp = 0
@@ -126,8 +124,7 @@ def create_initial_sol(matp, nodi, mats):
                 ind = nodi[j].idN
         matp[len(matp[j]) - 1][ind] = -1
         matp[ind][len(matp[j]) - 1] = 1
-    # stampa3(matp)
-    # inserisco i nodi successivi
+
     """ciclo i e j mi serve per prendere i pazienti da ogni saletta 
         in seguito ciclo con z su la lunghezza di nodi (indice di riga matrice)
         (in nodi ho la lista dei nodi con id nodo, id paziente e quale visita)
@@ -200,7 +197,7 @@ def initial_sol(matp, nodi, mats, listp):
         for j in range(0, len(nodi)):
             if i + 1 == nodi[j].idP:
                 tmpnd.append(nodi[j])
-
+        # TODO: funziona solo per il primo paziente, gli altri li mette a caso
         res = sort_nodi_for_visit(tmpnd)
         lres = len(res) - 1
         # print(res)
@@ -264,17 +261,18 @@ def process(lists, listp, durataTest, stampa):
     # calcolo makespan usando la black box
     makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
 
-    if stampa:
+    #if stampa:
         # crea il grafo con plotly con la prima soluzione
-        grafico_gantt(lista_tot)
+        #grafico_gantt(lista_tot)
+
+    print("\nMakespan è: " + str(makespan))
     if stampa:
-        print("\nMakespan è: " + str(makespan))
-        print("\n TABU SEARCH\n")
+        print("\n TABU SEARCH \n")
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
-    if stampa:
+    #if stampa:
         # crea il grafo con plotly con la soluzione trovata dalla tabu
-        grafico_gantt(sol.lista_tot)
+        #grafico_gantt(sol.lista_tot)
 
         # stampa un grafo con tutti i makespan trovati
-        grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
+        #grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
     return sol
