@@ -1,4 +1,3 @@
-from helpers.grafo_gantt import grafo_makespan
 from helpers.soluzione import *
 
 
@@ -276,3 +275,74 @@ def process(lists, listp, durataTest, stampa):
         # stampa un grafo con tutti i makespan trovati
         #grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
     return sol
+
+
+def greedy(lists, listp, durataTest, stampa):
+
+    mp, ms = set_the_mat(lists, listp)
+
+    nodi, numn = crea_nodo(mp, ms)
+    mstart = create_mat(nodi)
+
+    # crea la soluzione e poi crea matrice bool
+    matp = initial_sol(mstart, nodi, ms, listp)
+
+    # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
+    mstartbool = create_mat_bool(nodi)
+    if stampa:
+        print("\nStampa Matrice Booleana: ")
+        # stampa3(mstartbool)
+        stampa_bool(mstartbool)
+
+    # inserisco archi tra nodi che hanno la stessa visita
+    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest, stampa)
+    if stampa:
+        print("\nStampa di una possibile soluzione: ")
+        stampa3(soluzione)
+
+    # calcolo makespan usando la black box
+    makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
+
+    return makespan, lista_tot
+
+def path_relinking(listp, index):
+
+    # swap pazienti
+    for p1 in listp:
+       for p2 in listp:
+            if p1 != p2: # se non sono lo stesso paziente
+                if p1.saletta != p2.saletta: # se non sono nella stessa sala
+                    l = list(set(p1.test_array) & set(p2.test_array))
+                    n = len(l)
+                    if n > 0: # se hanno almeno un elemento in comune
+                        s1, s2 = p1.saletta, p2.saletta
+                        s2, s1 = p1.saletta, p2.saletta
+
+    # inserimento nelle varie salette
+    saletta = [1, 2, 3]
+    sala1 = []
+    sala2 = []
+    sala3 = []
+    lists = []
+
+    for s in saletta:
+        for i in range(0, len(listp)):
+            if s == 1:
+                if listp[i].saletta == s:
+                    sala1.append(listp[i].id)
+            if s == 2:
+                if listp[i].saletta == s:
+                    sala2.append(listp[i].id)
+            if s == 3:
+                if listp[i].saletta == s:
+                    sala3.append(listp[i].id)
+
+    for i in range(0, 3):
+        if i == 0:
+            lists.append(sala1)
+        if i == 1:
+            lists.append(sala2)
+        if i == 2:
+            lists.append(sala3)
+
+    return listp, lists

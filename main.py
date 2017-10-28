@@ -1,7 +1,7 @@
 import threading
 import random
-from math import *
-
+import copy
+import time
 from helpers.caricamento import *
 from helpers.schedule import *
 from helpers.utils import *
@@ -15,9 +15,21 @@ if __name__ == "__main__":
 
     while True:
         # Main Menu
+        ListPaz = []
+        i = 1
+        print("\n")
+        for file in os.listdir("helpers"):
+            if file.endswith(".txt"):
+                print(i, file)
+                ListPaz.append(str(file))
+                i += 1
+        nfile = loop_int_input(out_lck, "Scegliere un file file")
+        nf = int(nfile) - 1
+        filename = copy.copy(ListPaz[nf])
+
         main_menu = loop_menu(out_lck, "\nSelect one of the following actions ('e' to exit): ",
-                              ["Pazienti Ordinati First Fit Decreasing", "Pazienti inseriti con ordine di arrivo",
-                               "Swap Ordine Pazienti"])
+                              ["Pazienti Ordinati First Fit Decreasing + Tabu Search", "Pazienti inseriti con ordine di arrivo + Tabu Search",
+                               "Random Search + Path Relinking"])
 
         if main_menu == 1:
             print("Stampa di tutte le info? 1 Si   2 No")
@@ -27,7 +39,7 @@ if __name__ == "__main__":
             elif int(a) == 2:
                 stampa = False
             listp = []
-            with open('helpers/pazienti.txt', 'r') as file_p:
+            with open("helpers/"+filename, 'r') as file_p:
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
@@ -70,7 +82,7 @@ if __name__ == "__main__":
             elif int(a) == 2:
                 stampa = False
             listp = []
-            with open('helpers/pazienti.txt', 'r') as file_p:
+            with open("helpers/"+filename, 'r') as file_p:
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
@@ -102,8 +114,12 @@ if __name__ == "__main__":
             stampa = False
             listp = []
             ltemp = []
-            lista_soluzioni = []
-            with open('helpers/pazienti.txt', 'r') as file_p:
+            lista_soluzioni = [] #lista di strutture soluzione
+            lista_tot = [] # lista di ogni singolo task
+            lista_m = [] # lista dei vari makespan
+            lista_task = [] # lista di liste di ogni singolo task
+            lista_pazienti_struc = [] # lista dei paz come struct
+            with open("helpers/"+filename, 'r') as file_p:
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
@@ -120,7 +136,7 @@ if __name__ == "__main__":
             cicli = int(factorial(len(listp))/factorial(k)*factorial(k-1))
             print(cicli)
             '''
-            cicli = 100
+            cicli = 3000
             lista_pazienti = [] # lista di liste pazienti
             progress = ProgressBar(cicli, fmt=ProgressBar.FULL)
             while n < cicli:
@@ -153,12 +169,50 @@ if __name__ == "__main__":
                         if i == 2:
                             lists.append(sala3)
 
-                    sol = process(lists, listp, durataTest, stampa)
-                    lista_soluzioni.append(sol)
+                    makespan, lista_tot = greedy(lists, listp, durataTest, stampa)
+                    lista_pazienti_struc.append(listp)
+                    lista_m.append(makespan) # lista con i makespan trovati
+                    lista_task.append(lista_tot) # lista con strutture task elaborate
+                    #lista_soluzioni.append(sol)
                 listp = ltemp
                 lists = []
                 n = n + 1
+            print("\nStart Path Relinking ")
+            # -----------------------------------------------------------------
+            # NEL CAS NON VADA LA PATH RELINKING
+            progress2 = ProgressBar(10, fmt=ProgressBar.FULL)
+            z = 0
+            while z < 10:
+                progress2.current += 1
+                progress2()
+                time.sleep(1)
+                z += 1
+            best = min(lista_m)
+            print("\n Best makespan: "+str(best))
 
+            index_best = choose_best(lista_m, best)
+            sol = lista_task[index_best]
+
+            for i in sol:
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                    i.start) + " End: " + str(i.end))
+            # -----------------------------------------------------------------
+            makespan_best = 100
+            list_index = []
+            true = False
+            k = 0
+            '''
+            while k < 21:
+                for index in (0,3): # sarebbe len della più piccola lista di pazienti
+                    new_list_paz, lists_new = path_relinking(lista_pazienti_struc[index_best], index) # faccio swap pazienti e creo lista paz e salette nuova
+                    sol = process(lists_new, new_list_paz, durataTest, stampa) # chiamo tabu
+                if sol.makespan <= makespan_best:
+                    makespan_best = sol.makespan
+                k = k + 1
+
+            print(makespan)
+            '''
+            '''
             max = 1000
             index = 0
             # cerco indice della soluzione migliore nella lista_sol tra quelle trovate
@@ -181,6 +235,5 @@ if __name__ == "__main__":
 
             min_makespan = min(lista_makespan_migliori)
             print("Makespan Ottimo trovato: "+str(min_makespan))
-
-
+            '''
 

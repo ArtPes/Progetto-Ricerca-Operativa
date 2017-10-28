@@ -155,3 +155,9 @@ def stampa_info_saletta(lists):
         print("saletta " + str(i + 1) + str(lists[i]))
 
 
+def choose_best(l,b):
+    index = 0
+    for i in range(0,len(l)):
+        if l[i] == b:
+            index = i
+    return index
