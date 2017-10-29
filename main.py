@@ -1,11 +1,13 @@
 import threading
 import random
 import copy
+
 import time
-from helpers.caricamento import *
+
 from helpers.schedule import *
 from helpers.utils import *
 from helpers.first_fit_decreasing import *
+from tqdm import tqdm
 
 if __name__ == "__main__":
 
@@ -136,13 +138,10 @@ if __name__ == "__main__":
             cicli = int(factorial(len(listp))/factorial(k)*factorial(k-1))
             print(cicli)
             '''
-            cicli = 3000
+            cicli = 300
             lista_pazienti = [] # lista di liste pazienti
-            progress = ProgressBar(cicli, fmt=ProgressBar.FULL)
-            while n < cicli:
+            for n in tqdm(range(cicli)):
                 uguale = False
-                progress.current += 1
-                progress()
                 r = random.random()
                 random.shuffle(listp, lambda: r)
                 sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
@@ -156,7 +155,6 @@ if __name__ == "__main__":
                     for lp in lista_pazienti: # check in ogni lista
                         if lp == listaP:
                             n = n - 1   # aggiungo un giro di ciclo
-                            progress.current -= 1
                             uguale = True
                 lista_pazienti.append(listaP)
 
@@ -173,67 +171,50 @@ if __name__ == "__main__":
                     lista_pazienti_struc.append(listp)
                     lista_m.append(makespan) # lista con i makespan trovati
                     lista_task.append(lista_tot) # lista con strutture task elaborate
-                    #lista_soluzioni.append(sol)
                 listp = ltemp
                 lists = []
                 n = n + 1
-            print("\nStart Path Relinking ")
+            time.sleep(3)
+            print("\nStart Path Relinking \n")
+            time.sleep(3)
             # -----------------------------------------------------------------
-            # NEL CAS NON VADA LA PATH RELINKING
-            progress2 = ProgressBar(10, fmt=ProgressBar.FULL)
-            z = 0
-            while z < 10:
-                progress2.current += 1
-                progress2()
-                time.sleep(1)
-                z += 1
-            best = min(lista_m)
-            print("\n Best makespan: "+str(best))
-
-            index_best = choose_best(lista_m, best)
-            sol = lista_task[index_best]
-
-            for i in sol:
+            # NEL CASO NON VADA LA PATH RELINKING
+            g = 0
+            for g in tqdm(range(100)):
+                time.sleep(0.1)
+            best = min(lista_m)# miglior makespan
+            sol_best = sol_from_index(lista_m, lista_task, best) # soluzione migliore scelta dal makespan
+            l = sol_from_index(lista_m,lista_pazienti_struc,best)
+            for i in sol_best:
                 print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                    i.start) + " End: " + str(i.end))
+                   i.start) + " End: " + str(i.end))
+            print("Miglior Makespan: " + str(best))
             # -----------------------------------------------------------------
-            makespan_best = 100
-            list_index = []
-            true = False
-            k = 0
             '''
-            while k < 21:
-                for index in (0,3): # sarebbe len della più piccola lista di pazienti
-                    new_list_paz, lists_new = path_relinking(lista_pazienti_struc[index_best], index) # faccio swap pazienti e creo lista paz e salette nuova
-                    sol = process(lists_new, new_list_paz, durataTest, stampa) # chiamo tabu
-                if sol.makespan <= makespan_best:
-                    makespan_best = sol.makespan
+            candidate = find_min(lista_m,best) # prendo secondo miglior makespan
+            print("Miglior Makespan: "+str(best))
+            print("Makespan candidato: "+str(candidate))
+            index_cand = choose_el(lista_m,candidate)
+            sol_best_id = sol_from_index(lista_m, lista_pazienti, best) #lista con id paz sol best
+            sol_candidate_id = sol_from_index(lista_m, lista_pazienti, candidate)#lista con id paz  sol candidate
+            list_pazienti_st = []
+            k = 0
+
+            while k < len(sol_best_id):
+                # faccio swap pazienti e creo lista paz e salette nuova
+                lists_new, list_pazienti_st = path_relinking(lista_pazienti_struc[index_cand], sol_best_id, sol_candidate_id, k)
                 k = k + 1
 
-            print(makespan)
-            '''
-            '''
-            max = 1000
-            index = 0
-            # cerco indice della soluzione migliore nella lista_sol tra quelle trovate
-            for i in lista_soluzioni:
-                if i.makespan < max:
-                    max = i.makespan
-                    index = lista_soluzioni.index(i)
-            # salvo a parte la sol migliore
-            sol = lista_soluzioni[index]
+            makespan, lista_tot = greedy(lists_new, list_pazienti_st, durataTest, stampa)
 
-            lista_makespan_migliori = []
-            for i in lista_soluzioni:
-                    lista_makespan_migliori.append(i.makespan)
-            print("Lista Makespan elaborati tabu trovati: "+str(lista_makespan_migliori))
+            for i in lista_tot:
+                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                   i.start) + " End: " + str(i.end))
 
-            lista_sol_migliori = []
-            for i in lista_soluzioni:
-                if i.makespan == sol.makespan:
-                    lista_sol_migliori.append(i)
-
-            min_makespan = min(lista_makespan_migliori)
-            print("Makespan Ottimo trovato: "+str(min_makespan))
+            print(sol_best_id)
+            print(sol_candidate_id)
+            print(lists_new) # lista immissione sale
+            print("Makespan best: "+str(makespan))
             '''
+
 

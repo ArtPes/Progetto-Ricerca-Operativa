@@ -1,4 +1,5 @@
 from helpers.soluzione import *
+from helpers.utils import *
 
 
 def list_to_mat(list):
@@ -82,7 +83,8 @@ def create_mat_bool(nodi):
     '''
     for i in range(0, len(nodi)):
         for j in range(0, len(nodi)):
-            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[j].visita: # nodi che condividono lo stesso paziente hanno archi disgiuntivi
+            if nodi[i].idP == nodi[j].idP and nodi[i].visita != nodi[
+                j].visita:  # nodi che condividono lo stesso paziente hanno archi disgiuntivi
                 matbool[i][j] = True
             else:
                 matbool[i][j] = False  # tutto il resto a false perchè non è variabile
@@ -260,25 +262,24 @@ def process(lists, listp, durataTest, stampa):
     # calcolo makespan usando la black box
     makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
 
-    #if stampa:
-        # crea il grafo con plotly con la prima soluzione
-        #grafico_gantt(lista_tot)
+    # if stampa:
+    # crea il grafo con plotly con la prima soluzione
+    # grafico_gantt(lista_tot)
 
     print("\nMakespan è: " + str(makespan))
     if stampa:
         print("\n TABU SEARCH \n")
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
-    #if stampa:
-        # crea il grafo con plotly con la soluzione trovata dalla tabu
-        #grafico_gantt(sol.lista_tot)
+    # if stampa:
+    # crea il grafo con plotly con la soluzione trovata dalla tabu
+    # grafico_gantt(sol.lista_tot)
 
-        # stampa un grafo con tutti i makespan trovati
-        #grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
+    # stampa un grafo con tutti i makespan trovati
+    # grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
     return sol
 
 
 def greedy(lists, listp, durataTest, stampa):
-
     mp, ms = set_the_mat(lists, listp)
 
     nodi, numn = crea_nodo(mp, ms)
@@ -305,44 +306,25 @@ def greedy(lists, listp, durataTest, stampa):
 
     return makespan, lista_tot
 
-def path_relinking(listp, index):
 
-    # swap pazienti
-    for p1 in listp:
-       for p2 in listp:
-            if p1 != p2: # se non sono lo stesso paziente
-                if p1.saletta != p2.saletta: # se non sono nella stessa sala
-                    l = list(set(p1.test_array) & set(p2.test_array))
-                    n = len(l)
-                    if n > 0: # se hanno almeno un elemento in comune
-                        s1, s2 = p1.saletta, p2.saletta
-                        s2, s1 = p1.saletta, p2.saletta
-
-    # inserimento nelle varie salette
-    saletta = [1, 2, 3]
-    sala1 = []
-    sala2 = []
-    sala3 = []
+def path_relinking(listp, list_best, list_cand, k):
     lists = []
+    if list_cand[k] == list_best[k]: # se sono ugali non cambio nulla, restituisco la sol così
+        list_cand = list_cand
+    else : # se sono diversi
+        index = choose_el(list_cand,list_best[k]) # cerco l'indice nella sol candidate del valore nella soluzione best
+        list_cand[k], list_cand[index] = list_cand[index], list_cand[k]
 
-    for s in saletta:
-        for i in range(0, len(listp)):
-            if s == 1:
-                if listp[i].saletta == s:
-                    sala1.append(listp[i].id)
-            if s == 2:
-                if listp[i].saletta == s:
-                    sala2.append(listp[i].id)
-            if s == 3:
-                if listp[i].saletta == s:
-                    sala3.append(listp[i].id)
+    listp_new = [] #nuova lista pazienti
+    for a in list_cand:
+        for b in listp:
+            if b.id == a:
+                listp_new.append(b)
 
-    for i in range(0, 3):
-        if i == 0:
-            lists.append(sala1)
-        if i == 1:
-            lists.append(sala2)
-        if i == 2:
-            lists.append(sala3)
+    sala1, sala2, sala3 = inserimento_ordine_arrivo(listp_new)
 
-    return listp, lists
+    lists.append(sala1)
+    lists.append(sala2)
+    lists.append(sala3)
+
+    return lists, listp_new

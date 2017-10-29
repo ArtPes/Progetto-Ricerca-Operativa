@@ -155,9 +155,22 @@ def stampa_info_saletta(lists):
         print("saletta " + str(i + 1) + str(lists[i]))
 
 
-def choose_best(l,b):
+# return index of element
+def choose_el(l, b):
     index = 0
-    for i in range(0,len(l)):
+    for i in range(0, len(l)):
         if l[i] == b:
             index = i
     return index
+
+# dato indice trova giusta lista
+def sol_from_index(list_m, list_s, value):
+    index = choose_el(list_m, value)  # return index of element
+    sol = list_s[index]
+    return sol
+
+# cerca secondo miglior makespan
+def find_min(list, value):
+    for i in range(1,100):
+        if value + i in list:
+            return value + 1
