@@ -163,14 +163,16 @@ def choose_el(l, b):
             index = i
     return index
 
+
 # dato indice trova giusta lista
 def sol_from_index(list_m, list_s, value):
     index = choose_el(list_m, value)  # return index of element
     sol = list_s[index]
     return sol
 
+
 # cerca secondo miglior makespan
 def find_min(list, value):
-    for i in range(1,100):
+    for i in range(1, 100):
         if value + i in list:
             return value + 1

@@ -266,7 +266,7 @@ def process(lists, listp, durataTest, stampa):
     # crea il grafo con plotly con la prima soluzione
     # grafico_gantt(lista_tot)
 
-    print("\nMakespan è: " + str(makespan))
+    print("\nMakespan sol grezza è: " + str(makespan))
     if stampa:
         print("\n TABU SEARCH \n")
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
