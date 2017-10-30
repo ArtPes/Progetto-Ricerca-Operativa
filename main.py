@@ -115,7 +115,6 @@ if __name__ == "__main__":
         elif main_menu == 3:
             stampa = False
             listp = []
-            ltemp = []
             lista_soluzioni = [] #lista di strutture soluzione
             lista_tot = [] # lista di ogni singolo task
             lista_m = [] # lista dei vari makespan
@@ -125,10 +124,9 @@ if __name__ == "__main__":
                 for line in file_p:
                     pz = Paziente(line)
                     listp.append(pz)
-                    ltemp.append(pz)
 
             lists = []
-
+            lista_sale = []
             # inserimento random nelle sale con check di non inserire gli stessi pazienti nelle stesse posizioni
             # e check finale del miglior makespan trovato
             n = 0
@@ -138,25 +136,30 @@ if __name__ == "__main__":
             cicli = int(factorial(len(listp))/factorial(k)*factorial(k-1))
             print(cicli)
             '''
-            cicli = 300
+            cicli = 10
             lista_pazienti = [] # lista di liste pazienti
             for n in tqdm(range(cicli)):
                 uguale = False
                 r = random.random()
+                lst = []
                 random.shuffle(listp, lambda: r)
                 sala1, sala2, sala3 = inserimento_ordine_arrivo(listp)
+                lst = copy.copy(listp) # copia di una lista di object
+                lista_pazienti_struc.append(lst)  # lista con strutture paziente
                 listaP = []  # singola lista pazienti trovata
                 for i in range(0,len(listp)):
                     listaP.append(listp[i].id)
                 # check se lista è uguale a quelle prima testate
+                lista_pazienti.append(listaP)
+                '''
                 if not lista_pazienti:# se lista di liste paz è vuota la riempio con primo elemento
-                    lista_pazienti.append(listaP)
+                    lista_pazienti.append(listaP) # lista con id paziente in ordine
                 else:
                     for lp in lista_pazienti: # check in ogni lista
                         if lp == listaP:
                             n = n - 1   # aggiungo un giro di ciclo
                             uguale = True
-                lista_pazienti.append(listaP)
+                lista_pazienti.append(listaP) # lista con id paziente in ordine
 
                 if not uguale: # se la lista è gia presente non sto ad elaborarla
                     for i in range(0, 3):
@@ -166,55 +169,88 @@ if __name__ == "__main__":
                             lists.append(sala2)
                         if i == 2:
                             lists.append(sala3)
+                '''
 
-                    makespan, lista_tot = greedy(lists, listp, durataTest, stampa)
-                    lista_pazienti_struc.append(listp)
-                    lista_m.append(makespan) # lista con i makespan trovati
-                    lista_task.append(lista_tot) # lista con strutture task elaborate
-                listp = ltemp
+                for j in range(0, 3):
+                    if j == 0:
+                        lists.append(sala1)
+                    if j == 1:
+                        lists.append(sala2)
+                    if j == 2:
+                        lists.append(sala3)
+
+                makespan, lista_tot = greedy(lists, listp, durataTest, stampa)
+                lista_m.append(makespan) # lista con i makespan trovati
+                lt = copy.copy(lista_tot)# copia di una lista di object
+                lista_task.append(lt) # lista con strutture task elaborate
+                lista_sale.append(lists)
                 lists = []
+                lt = []
+
                 n = n + 1
-            time.sleep(3)
+            time.sleep(2)
             print("\nStart Path Relinking \n")
-            time.sleep(3)
-            # -----------------------------------------------------------------
-            # NEL CASO NON VADA LA PATH RELINKING
+            time.sleep(2)
+
             g = 0
-            for g in tqdm(range(100)):
+            for g in tqdm(range(10)):
                 time.sleep(0.1)
+
             best = min(lista_m)# miglior makespan
-            sol_best = sol_from_index(lista_m, lista_task, best) # soluzione migliore scelta dal makespan
-            l = sol_from_index(lista_m,lista_pazienti_struc,best)
-            for i in sol_best:
-                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                   i.start) + " End: " + str(i.end))
-            print("Miglior Makespan: " + str(best))
-            # -----------------------------------------------------------------
-            '''
+            index_best = lista_m.index(best)
+            sol_best = lista_task[index_best]
+
+
             candidate = find_min(lista_m,best) # prendo secondo miglior makespan
-            print("Miglior Makespan: "+str(best))
-            print("Makespan candidato: "+str(candidate))
+            print("Miglior Makespan trovato: "+str(best))
+            print("Makespan candidato scelto: "+str(candidate))
             index_cand = choose_el(lista_m,candidate)
-            sol_best_id = sol_from_index(lista_m, lista_pazienti, best) #lista con id paz sol best
-            sol_candidate_id = sol_from_index(lista_m, lista_pazienti, candidate)#lista con id paz  sol candidate
+            sol_best_id = lista_pazienti[index_best] #lista con id paz sol best
+            sol_candidate_id = lista_pazienti[index_cand]#lista con id paz  sol candidate
             list_pazienti_st = []
             k = 0
-
+            array_makespan = []
+            array_task = []
+            array_task_p = []
+            array_list_id = []
+            ap = []
             while k < len(sol_best_id):
                 # faccio swap pazienti e creo lista paz e salette nuova
                 lists_new, list_pazienti_st = path_relinking(lista_pazienti_struc[index_cand], sol_best_id, sol_candidate_id, k)
+                makespan, lista_tot = greedy(lists_new, list_pazienti_st, durataTest, stampa)
+                array_makespan.append(makespan)
+                ap = copy.copy(lista_tot)
+                array_task.append(ap)
+                ap = []
+                at = copy.copy(list_pazienti_st)
+                array_task_p.append(at)
+                at = []
+                array_list_id.append(lists_new)
                 k = k + 1
 
-            makespan, lista_tot = greedy(lists_new, list_pazienti_st, durataTest, stampa)
+            #makespan, lista_tot = greedy(lists_new, list_pazienti_st, durataTest, stampa)
+            migliore = min(array_makespan)
+            index_migliore = array_makespan.index(migliore)
 
-            for i in lista_tot:
+            #for i in array_task[index_migliore]:
+            #    print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+            #       i.start) + " End: " + str(i.end))
+            #print(array_list_id[index_migliore])
+            print("Makespan rielaborato da candidato: "+str(array_makespan[index_migliore]))
+            print("\n Affinamento soluzione con Tabu Search...")
+            #for x in array_task_p[index_migliore]:
+            #    print(x.id)
+
+            sol = process(array_list_id[index_migliore],array_task_p[index_migliore], durataTest, stampa)
+            for i in sol.lista_tot:
                 print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                   i.start) + " End: " + str(i.end))
+                    i.start) + " End: " + str(i.end))
+            print("\nMakespan finale della Path Relinking: "+str(sol.makespan))
 
-            print(sol_best_id)
-            print(sol_candidate_id)
-            print(lists_new) # lista immissione sale
-            print("Makespan best: "+str(makespan))
-            '''
+            #print(sol_best_id)
+            #print(sol_candidate_id)
+            #print(lists_new) # lista immissione sale
+            #print("Makespan best: "+str(makespan))
+
 
 
