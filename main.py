@@ -1,7 +1,6 @@
 import threading
 import random
 import copy
-
 import time
 from helpers.schedule import *
 from helpers.utils import *
@@ -127,11 +126,13 @@ if __name__ == "__main__":
 
             lists = []
             lista_sale = []
-            # inserimento random nelle sale con check di non inserire gli stessi pazienti nelle stesse posizioni
+            # inserimento random nelle sale con check di non
+            # inserire gli stessi pazienti nelle stesse posizioni
             # e check finale del miglior makespan trovato
             n = 0
             # !!!!NUMERO DI CICLI!!!!
-            # Numero di clicli è la permutazione di n pazienti n!, per comodità mettiamo un ciclo a 1000 e controlliamo che non vi siano ripetzioni
+            # Numero di clicli è la permutazione di n pazienti n!,
+            # per comodità mettiamo un ciclo a 1000 e controlliamo che non vi siano ripetzioni
             cicli = 1000
             lista_pazienti = []  # lista di liste pazienti
             for n in tqdm(range(cicli)):
@@ -147,7 +148,6 @@ if __name__ == "__main__":
                     listaP.append(listp[i].id)
                 # check se lista è uguale a quelle prima testate
                 # lista_pazienti.append(listaP)
-
                 if not lista_pazienti:  # se lista di liste paz è vuota la riempio con primo elemento
                     uguale = False
                 else:
@@ -155,7 +155,6 @@ if __name__ == "__main__":
                         if lp == listaP:
                             n = n - 1  # aggiungo un giro di ciclo
                             uguale = True
-
                 if not uguale:  # se la lista è gia presente non sto ad elaborarla
                     lista_pazienti.append(listaP)  # lista con id paziente in ordine
                     for j in range(0, 3):
@@ -165,7 +164,6 @@ if __name__ == "__main__":
                             lists.append(sala2)
                         if j == 2:
                             lists.append(sala3)
-
                     makespan, lista_tot = greedy(lists, listp, durataTest, stampa)
                     lista_m.append(makespan)  # lista con i makespan trovati
                     lt = copy.copy(lista_tot)  # copia di una lista di object
@@ -196,6 +194,11 @@ if __name__ == "__main__":
             sol_candidate_id = lista_pazienti[index_cand]  # lista con id paz  sol candidate
             list_pazienti_st = []
             k = 0
+            # liste makespan per grafo finale
+            lista_tabu = []
+            lista_path = []
+            lista_path.append(best)
+            lista_path.append(candidate)
             '''
             array_makespan = []
             array_task = []
@@ -221,6 +224,7 @@ if __name__ == "__main__":
                 k = k + 1
                 '''
                 sol = process(lists_new, list_pazienti_st, durataTest, stampa)
+                lista_tabu.append(sol.makespan)
                 if sol.makespan < make:
                     make = sol.makespan
                     b_sol = sol
@@ -258,3 +262,5 @@ if __name__ == "__main__":
             #print(lists_new) # lista immissione sale
             #print("Makespan best: "+str(makespan))
             '''
+            # stampa un grafo con tutti i makespan trovati
+            grafo_makespan_2(lista_m, lista_tabu, lista_path)

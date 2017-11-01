@@ -4,9 +4,55 @@ import plotly.plotly as py
 import plotly.figure_factory as ff
 import plotly.graph_objs as go
 import numpy as np
+
 plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
 
-def grafo_makespan(lista,makespan_end,makespan_start):
+
+def grafo_makespan_2(lista_random, lista_tabu, lista_path):
+
+    N1 = len(lista_random)
+    N2 = len(lista_tabu)
+    N3 = len(lista_path)
+
+    r_x = np.random.randn(N1)
+    r_y = lista_random
+
+    t_x = np.random.randn(N2)
+    t_y = lista_tabu
+
+    p_x = np.random.randn(N3)
+    p_y = lista_path
+
+    # Create a trace
+    trace0 = go.Scatter(
+        x=r_x,
+        y=r_y,
+        mode='markers',
+        name='Makespan Random',
+        marker=dict(size=10)
+    )
+    trace1 = go.Scatter(
+        x=t_x,
+        y=t_y,
+        mode='markers',
+        marker=dict(color='rgb(154,233,22)', size=10),
+        name='Makespan Tabu'
+    )
+    trace2 = go.Scatter(
+        x=p_x,
+        y=p_y,
+        mode='markers',
+        marker=dict(color='rgb(191,10,10)', size=10),
+        name='Makespan Path'
+    )
+
+    data = [trace0, trace1, trace2]
+
+    # Plot and embed in ipython notebook!
+    py.plot(data, filename='basic-scatter')
+
+
+def grafo_makespan(lista, makespan_end, makespan_start):
     N = len(lista)
     random_x = np.linspace(0, N + 1500, N)
     random_y = lista
@@ -35,28 +81,29 @@ def grafo_makespan(lista,makespan_end,makespan_start):
         x=random_x,
         y=random_y,
         mode='markers',
-        name = 'Makespan Tabu',
-        marker = dict(size = 10)
+        name='Makespan Tabu',
+        marker=dict(size=10)
     )
     trace1 = go.Scatter(
-        x = 0,
-        y = makespan_end,
-        mode = 'markers',
-        marker = dict (color='rgb(154,233,22)', size=25),
-        name = 'Makespan_End'
+        x=0,
+        y=makespan_end,
+        mode='markers',
+        marker=dict(color='rgb(154,233,22)', size=25),
+        name='Makespan_End'
     )
     trace2 = go.Scatter(
-        x = 0,
-        y = makespan_start,
-        mode = 'markers',
-        marker = dict (color='rgb(191,10,10)', size=25),
-        name = 'Makespan_Start'
+        x=0,
+        y=makespan_start,
+        mode='markers',
+        marker=dict(color='rgb(191,10,10)', size=25),
+        name='Makespan_Start'
     )
 
-    data = [trace0,trace1,trace2]
+    data = [trace0, trace1, trace2]
 
     # Plot and embed in ipython notebook!
     py.plot(data, filename='basic-scatter')
+
 
 def grafico_gantt(lista):
     df = []
@@ -70,7 +117,6 @@ def grafico_gantt(lista):
             lista2.append(f)
         elif f.sala == 3:
             lista3.append(f)
-
 
     for t in lista1:
         start, end = trovaS_E(t)
@@ -98,6 +144,7 @@ def grafico_gantt(lista):
 
     fig = ff.create_gantt(df, colors=colors, index_col='Resource', show_colorbar=True, group_tasks=True)
     py.plot(fig, filename='gantt-dictioanry-colors', world_readable=True)
+
 
 def trovaS_E(t):
     i = 0
@@ -130,8 +177,8 @@ def trovaS_E(t):
 
     return start, end
 
-def check_gantt(lista_task,stampa):
 
+def check_gantt(lista_task, stampa):
     # metto i task in un array che definisce la sala in cui sono cosi facilito i vincoli tra pazienti nelle salette
     sala1 = []
     sala2 = []
@@ -157,16 +204,17 @@ def check_gantt(lista_task,stampa):
 
     if stampa:
         for i in sala1:
-                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                    i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
         for i in sala2:
-                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                    i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
         for i in sala3:
-                print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
-                    i.start) + " End: " + str(i.end))
+            print("Paziente:" + str(i.paziente) + " Sala:" + str(i.sala) + " Test:" + str(i.test) + " Start:" + str(
+                i.start) + " End: " + str(i.end))
 
     return sala1, sala2, sala3
+
 
 def vincolo_tra_test_uguali(lista1, lista2, lista3):
     occupato1 = True
@@ -206,11 +254,13 @@ def vincolo_tra_test_uguali(lista1, lista2, lista3):
                                i)  # shifto in avanti tutti i test di solo 1 cosi al prossimo ciclo faccio il check
     return lista1, lista2, lista3
 
+
 def shift_list(list, shift, index):
     # shift dall'indice i-esimo in poi, nno tutti i task della lista
     for i in range(index, len(list)):
         list[i].start = list[i].start + shift
         list[i].end = list[i].end + shift
+
 
 def vincoli_tra_paz_stessa_sala(sala, index):
     for i in range(index, len(sala)):  # parto da i-esimo elemento perchè non devo sempre settare tutta la lista
@@ -222,6 +272,7 @@ def vincoli_tra_paz_stessa_sala(sala, index):
                 sala[i + 1].start = sala[i].end
                 sala[i + 1].end = sala[i + 1].start + sala[i + 1].durata
 
+
 def insert_task_da_nodo(nodo):
     list_task = []
     # creo il task relativo a ogni paziente
@@ -232,14 +283,17 @@ def insert_task_da_nodo(nodo):
         list_task.append(task)
     return list_task
 
+
 def crea_task_da_nodo(nodo):
     task = Task(nodo.idP, nodo.sala, int(nodo.visita), 0)
     return task
+
 
 def elimina_nodi(tasks):
     for t in tasks:
         if t.sala == 0:  # nei nodi start-end la sala è impostata a 0
             tasks.remove(t)
+
 
 # ---------------------------------------------------------------------
 def black_box(ts1, ts2, ts3):

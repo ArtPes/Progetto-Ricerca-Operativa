@@ -275,7 +275,7 @@ def process(lists, listp, durataTest, stampa):
     # grafico_gantt(sol.lista_tot)
 
     # stampa un grafo con tutti i makespan trovati
-    # grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
+    grafo_makespan(sol.lista_makespan, sol.makespan, makespan)
     return sol
 
 
