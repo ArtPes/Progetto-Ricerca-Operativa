@@ -328,3 +328,28 @@ def path_relinking(listp, list_best, list_cand, k):
     lists.append(sala3)
 
     return lists, listp_new
+
+
+def process2(lists, listp, durataTest, stampa):
+    mp, ms = set_the_mat(lists, listp)
+
+    nodi, numn = crea_nodo(mp, ms)
+    mstart = create_mat(nodi)
+
+    # crea la soluzione e poi crea matrice bool
+    matp = initial_sol(mstart, nodi, ms, listp)
+
+    # crea matrice booleana che ha per come valori True solo archi DISGIUNTIVI
+    mstartbool = create_mat_bool(nodi)
+
+    # inserisco archi tra nodi che hanno la stessa visita
+    soluzione = soluzione_iniziale(mstart, mstartbool, nodi, durataTest, stampa)
+
+    # calcolo makespan usando la black box
+    makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
+
+    print("\nMakespan sol grezza è: " + str(makespan))
+
+    sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
+
+    return sol

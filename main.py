@@ -223,7 +223,7 @@ if __name__ == "__main__":
                 array_list_id.append(lists_new)
                 k = k + 1
                 '''
-                sol = process(lists_new, list_pazienti_st, durataTest, stampa)
+                sol = process2(lists_new, list_pazienti_st, durataTest, stampa)
                 lista_tabu.append(sol.makespan)
                 if sol.makespan < make:
                     make = sol.makespan
