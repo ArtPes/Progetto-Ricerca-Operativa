@@ -348,8 +348,8 @@ def process2(lists, listp, durataTest, stampa):
     # calcolo makespan usando la black box
     makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
 
-    print("\nMakespan sol grezza è: " + str(makespan))
+    print("Makespan sol grezza è: " + str(makespan))
 
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
-
+    print("Makespan sol tabu è: " + str(sol.makespan))
     return sol

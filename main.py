@@ -188,7 +188,7 @@ if __name__ == "__main__":
             sol_best = lista_task[index_best]
             candidate = find_min(lista_m, best + 2)  # prendo secondo miglior makespan
             print("\nMiglior Makespan trovato: " + str(best))
-            print("\nMakespan candidato scelto: " + str(candidate))
+            print("Makespan candidato scelto: " + str(candidate))
             index_cand = choose_el(lista_m, candidate)
             sol_best_id = lista_pazienti[index_best]  # lista con id paz sol best
             sol_candidate_id = lista_pazienti[index_cand]  # lista con id paz  sol candidate
@@ -211,6 +211,7 @@ if __name__ == "__main__":
                 # faccio swap pazienti e creo lista paz e salette nuova
                 lists_new, list_pazienti_st = path_relinking(lista_pazienti_struc[index_cand], sol_best_id,
                                                              sol_candidate_id, k)
+                print("\nIterazione n°: "+str(k))
                 '''
                 makespan, lista_tot = greedy(lists_new, list_pazienti_st, durataTest, stampa)
                 array_makespan.append(makespan)
