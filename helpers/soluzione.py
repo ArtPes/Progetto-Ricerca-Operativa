@@ -360,7 +360,7 @@ def tabu_search(grafo_candidato, makespan_candidato, grafo_disgiuntivo, nodi, du
             max = durate[i]
     max_makespan = max * len(nodi)
     makespan = max_makespan
-    iterazioni = 3
+    #iterazioni = 3
     while iterazioni > 0:
         iterazioni -= iterazioni
         # cerco i possibili altri archi che posso creare
