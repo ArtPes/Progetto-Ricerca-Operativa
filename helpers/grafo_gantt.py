@@ -5,7 +5,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objs as go
 import numpy as np
 
-plotly.tools.set_credentials_file(username='ArtPes', api_key='j4jXzdxLByLHpizcgmIN')
+plotly.tools.set_credentials_file(username='ArtPes', api_key='hCDgi18ZiOSOB2bw3JYo')
 
 
 def grafo_makespan_2(lista_random, lista_tabu, lista_path):

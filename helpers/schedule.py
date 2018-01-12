@@ -198,7 +198,7 @@ def initial_sol(matp, nodi, mats, listp):
         for j in range(0, len(nodi)):
             if i + 1 == nodi[j].idP:
                 tmpnd.append(nodi[j])
-        # TODO: funziona solo per il primo paziente, gli altri li mette a caso
+
         res = sort_nodi_for_visit(tmpnd)
         lres = len(res) - 1
         # print(res)
@@ -266,7 +266,7 @@ def process(lists, listp, durataTest, stampa):
     # crea il grafo con plotly con la prima soluzione
     # grafico_gantt(lista_tot)
 
-    print("\nMakespan sol grezza è: " + str(makespan))
+    print("\nMakespan sol iniziale è: " + str(makespan))
     if stampa:
         print("\n TABU SEARCH \n")
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
@@ -348,7 +348,7 @@ def process2(lists, listp, durataTest, stampa):
     # calcolo makespan usando la black box
     makespan, lista_tot = critical_path(soluzione, nodi, durataTest, stampa)
 
-    print("Makespan sol grezza è: " + str(makespan))
+    print("Makespan sol iniziale è: " + str(makespan))
 
     sol = tabu_search(soluzione, makespan, mstartbool, nodi, durataTest, stampa)
     print("Makespan sol tabu è: " + str(sol.makespan))
